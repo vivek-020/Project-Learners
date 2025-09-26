@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids Learning Rhymes 🎶</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(180deg,#fef2f2,#dbeafe);
+      transition: background 0.5s ease;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 16px;
+      padding: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    .sidebar h2 { margin-top:0; text-align:center; }
+    .rhyme-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 14px;
+      margin: 8px 0;
+      border: 2px solid #ddd;
+      border-radius: 14px;
+      background: #fef9c3;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: 0.3s;
+    }
+    .rhyme-btn:hover { background: #fde68a; }
+    .rhyme-btn.active {
+      background: #a7f3d0;
+      border-color: #10b981;
+    }
+    .controls button {
+      margin: 6px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .controls button:hover { transform: scale(1.1); }
+    .play { background:#34d399; }
+    .pause { background:#facc15; }
+    .stop { background:#f87171; }
+    .lyrics {
+      margin-top: 16px;
+      padding: 16px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      line-height: 2;
+      min-height: 200px;
+      font-size: 1.2em;
+    }
+    .word.active {
+      background: #fcd34d;
+      padding: 2px 4px;
+      border-radius: 6px;
+    }
+    .rewards {
+      margin-top: 10px;
+      font-size: 1.2em;
+    }
+    .theme-btn {
+      margin: 6px;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #333;
+    }
+    .mascot {
+      text-align: center;
+      font-size: 3em;
+      margin-top: 10px;
+    }
+    @media(max-width:768px){
+      .app { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar card">
+      <h2>🎵 Pick a Rhyme</h2>
+      <div id="rhymeList"></div>
+      <h3>🎨 Theme</h3>
+      <button class="theme-btn" style="background:#fde68a" onclick="changeTheme('linear-gradient(180deg,#fde68a,#fcd34d)')"></button>
+      <button class="theme-btn" style="background:#a7f3d0" onclick="changeTheme('linear-gradient(180deg,#a7f3d0,#6ee7b7)')"></button>
+      <button class="theme-btn" style="background:#93c5fd" onclick="changeTheme('linear-gradient(180deg,#93c5fd,#3b82f6)')"></button>
+    </aside>
+
+    <!-- Main Content -->
+     <!-- Main Content -->
+<main class="card">
+  <h1 id="title">Kids Rhymes 🎶</h1>
+  <p id="desc">Pick a rhyme and press ▶️ Play!</p>
+
+  <div class="controls">
+    <button id="playBtn" class="play">▶️ Play</button>
+    <button id="pauseBtn" class="pause">⏸ Pause</button>
+    <button id="stopBtn" class="stop">⏹ Stop</button>
+    <span id="status">Ready</span>
+  </div>
+
+  <!-- 🎥 Video Area -->
+  <div id="videoContainer" style="margin:16px 0; text-align:center;">
+    <video id="rhymeVideo" width="100%" height="300" controls>
+      <source src="humpty.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <div class="lyrics" id="lyrics"></div>
+  <div class="mascot" id="mascot">🐻</div>
+  <div class="rewards">⭐ Stars Earned: <span id="stars">0</span></div>
+</main>
+
+    <main class="card">
+      <h1 id="title">Kids Rhymes 🎶</h1>
+      <p id="desc">Pick a rhyme and press ▶️ Play!</p>
+
+      <div class="controls">
+        <button id="playBtn" class="play">▶️ Play</button>
+        <button id="pauseBtn" class="pause">⏸ Pause</button>
+        <button id="stopBtn" class="stop">⏹ Stop</button>
+        <span id="status">Ready</span>
+      </div>
+
+      <div class="lyrics" id="lyrics"></div>
+      <div class="mascot" id="mascot">🐻</div>
+      <div class="rewards">⭐ Stars Earned: <span id="stars">0</span></div>
+    </main>
+  </div>
+
+  <script>
+    // 📖 Dynamic Rhymes Database
+    const poems = {
+      "Twinkle Twinkle": `Twinkle twinkle little star,
+How I wonder what you are.
+Up above the world so high,
+Like a diamond in the sky.`,
+
+      "Baa Baa Black Sheep": `Baa baa black sheep, have you any wool?
+Yes sir, yes sir, three bags full.
+One for the master, one for the dame,
+And one for the little boy who lives down the lane.`,
+
+      "Humpty Dumpty": `Humpty Dumpty sat on a wall,
+Humpty Dumpty had a great fall.
+All the king's horses and all the king's men,
+Couldn't put Humpty together again.`,
+
+      "Jack and Jill": `Jack and Jill went up the hill
+To fetch a pail of water.
+Jack fell down and broke his crown,
+And Jill came tumbling after.`,
+
+      "Itsy Bitsy Spider": `The itsy bitsy spider climbed up the water spout.
+Down came the rain and washed the spider out.
+Out came the sun and dried up all the rain,
+And the itsy bitsy spider climbed up the spout again.`
+    };
+
+    // 🎛 Elements
+    const rhymeList = document.getElementById("rhymeList");
+    const lyricsDiv = document.getElementById("lyrics");
+    const statusSpan = document.getElementById("status");
+    const mascot = document.getElementById("mascot");
+    const starsSpan = document.getElementById("stars");
+
+    let currentRhyme = "";
+    let voices = [];
+    let utterance;
+    let stars = 0;
+
+    // 📝 Load rhyme list dynamically
+    for (let title in poems) {
+      const btn = document.createElement("button");
+      btn.innerText = title;
+      btn.className = "rhyme-btn";
+      btn.onclick = () => selectRhyme(title, btn);
+      rhymeList.appendChild(btn);
+    }
+
+    function selectRhyme(title, btn) {
+      document.querySelectorAll(".rhyme-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      currentRhyme = title;
+      displayLyrics(poems[title]);
+      statusSpan.textContent = `Selected: ${title}`;
+      mascot.textContent = "🐻🎵";
+    }
+
+    function displayLyrics(text) {
+      lyricsDiv.innerHTML = "";
+      text.split(" ").forEach(word=>{
+        let span = document.createElement("span");
+        span.textContent = word + " ";
+        lyricsDiv.appendChild(span);
+      });
+    }
+
+    // 🎤 Speech setup
+    function speakPoem() {
+      if (!currentRhyme) { alert("Pick a rhyme first!"); return; }
+      window.speechSynthesis.cancel();
+      const text = poems[currentRhyme];
+      utterance = new SpeechSynthesisUtterance(text);
+
+      // Pick a sweet kid-friendly voice if available
+      let preferredVoice = voices.find(v => 
+        v.name.includes("Google UK English Female") || v.name.includes("Microsoft Zira") || v.name.includes("Female")
+      );
+      utterance.voice = preferredVoice || voices[0];
+
+      utterance.pitch = 1.1; // slightly higher for child-friendliness
+      utterance.rate = 0.95; // slower for clarity
+
+      utterance.onstart = ()=>{
+        statusSpan.textContent="Playing...";
+        mascot.textContent="🐻🎤";
+      };
+      utterance.onend = ()=>{
+        statusSpan.textContent="Finished!";
+        mascot.textContent="🐻👏";
+        stars++;
+        starsSpan.textContent = stars;
+        launchConfetti();
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function pausePoem(){window.speechSynthesis.pause(); statusSpan.textContent="Paused";}
+    function stopPoem(){window.speechSynthesis.cancel(); statusSpan.textContent="Stopped"; mascot.textContent="🐻";}
+
+    function changeTheme(bg){ document.body.style.background = bg; }
+
+    // Buttons
+    document.getElementById("playBtn").onclick=speakPoem;
+    document.getElementById("pauseBtn").onclick=pausePoem;
+    document.getElementById("stopBtn").onclick=stopPoem;
+
+    // Voices
+    function loadVoices(){voices=window.speechSynthesis.getVoices();}
+    window.speechSynthesis.onvoiceschanged=loadVoices;
+
+    // 🎉 Confetti
+    function launchConfetti(){
+      for(let i=0;i<30;i++){
+        const conf=document.createElement("div");
+        conf.textContent="🎉";
+        conf.style.position="fixed";
+        conf.style.left=Math.random()*100+"vw";
+        conf.style.top="-20px";
+        conf.style.fontSize="24px";
+        conf.style.animation=`drop ${2+Math.random()*2}s linear`;
+        document.body.appendChild(conf);
+        setTimeout(()=>conf.remove(),4000);
+      }
+    }
+    const style=document.createElement("style");
+    style.innerHTML=`@keyframes drop{to{transform:translateY(100vh);opacity:0}}`;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

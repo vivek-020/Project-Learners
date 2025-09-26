@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>6 years Kids Fill-in-the-Blank</title>
+  <style>
+    :root{
+      --bg:#fceabb; 
+      --bg2:#f8b500; 
+      --card:#fff; 
+      --accent:#ff6b6b; 
+      --muted:#555; 
+      --success:#16a34a; 
+      --danger:#dc2626;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family:'Comic Sans MS', 'Segoe UI', Roboto, Arial;
+      background:linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
+      margin:0; padding:20px; 
+      display:flex; align-items:center; justify-content:center; 
+      min-height:100vh;
+    }
+    .quiz-wrap{
+      width:850px; max-width:96%;
+      background:#fff9f2;
+      border-radius:20px; 
+      padding:26px; 
+      box-shadow:0 8px 20px rgba(0,0,0,0.15);
+      border:3px solid #ffcd94;
+    }
+    header{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    h1{font-size:24px; margin:0; color:#333}
+    .meta{color:#666; font-size:15px}
+    .question-card{
+      background:#fff3e0; 
+      padding:20px; border-radius:16px; 
+      margin-top:16px; min-height:140px;
+      border:2px dashed #ffb84d;
+    }
+    .sentence{font-size:20px; line-height:1.6; color:#222; font-weight:bold;}
+    .blank{
+      display:inline-block; min-width:120px; padding:6px 8px; margin:0 6px;
+      background:#ffe7c4; border-radius:10px; 
+      border:2px dashed #ff9800; 
+      cursor:pointer; text-align:center;
+    }
+    .blank.filled{
+      border:2px solid #ff9800; background:#ffd27f;
+    }
+
+    .options{
+      display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:18px;
+    }
+    .option{
+      background:#fff; padding:14px; 
+      border-radius:12px; 
+      cursor:pointer; 
+      border:2px solid #ffcd94;
+      font-size:16px; font-weight:600;
+      transition:transform .1s ease, box-shadow .1s ease;
+    }
+    .option:hover{transform:translateY(-3px); background:#fff9f0}
+
+    .controls{display:flex; gap:8px; margin-top:18px; align-items:center; flex-wrap:wrap}
+    button.btn{
+      background:var(--accent); color:white; border:none; 
+      padding:10px 16px; border-radius:10px; 
+      cursor:pointer; font-weight:700; font-size:15px;
+    }
+    button.secondary{
+      background:#fff; border:2px solid #ffcd94; 
+      color:#444; font-size:15px;
+    }
+    .hint-box{
+      margin-left:auto; color:#555; font-size:14px; 
+      background:#fff8e7; padding:6px 10px; border-radius:8px; border:1px solid #ffcd94;
+    }
+    .status{margin-top:12px; font-size:16px; font-weight:bold;}
+
+    .pager{display:flex; gap:8px}
+    .small{font-size:14px; padding:8px 10px}
+
+    .result{padding:12px; margin-top:12px; border-radius:10px}
+    .result.correct{background:#d1fae5; color:var(--success)}
+    .result.wrong{background:#fee2e2; color:var(--danger)}
+
+    footer{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-top:18px; color:#444; font-size:14px
+    }
+
+    @media (max-width:520px){
+      .options{grid-template-columns:1fr}
+      .blank{min-width:80px}
+      .quiz-wrap{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-wrap" role="application" aria-label="Kids Fill in the blanks quiz">
+    <header>
+      <div>
+        <h1>Kids Fun Fill-in-the-Blanks 🎉</h1>
+        <div class="meta">Choose the right answer and learn!</div>
+      </div>
+      <div class="meta" id="progress">Q <strong id="qnum">1</strong> / <span id="total">20</span></div>
+    </header>
+    <main>
+      <section class="question-card" id="card">
+        <div class="sentence" id="sentence">Loading...</div>
+
+        <div class="options" id="options" role="list"></div>
+
+        <div class="controls">
+          <div class="pager">
+            <button class="btn small" id="prevBtn">◀ Prev</button>
+            <button class="btn small" id="nextBtn">Next ▶</button>
+          </div>
+          <button class="secondary small" id="hintBtn">💡 Hint</button>
+          <button class="btn small" id="submitBtn">Submit</button>
+          <div class="hint-box" id="hintBox" style="display:none">Hint here</div>
+        </div>
+
+        <div class="status" id="status"></div>
+      </section>
+
+      <footer>
+        <div class="meta">Tip: Tap an option to fill the blank.</div>
+        <div class="meta">Made with ❤️ for kids</div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const questions = [
+      {textParts:["The sky is ", "."], correctAnswer:"blue", options:["red","blue","green","yellow"], hint:"Look up during the day!"},
+      {textParts:["A cat says ", "."], correctAnswer:"meow", options:["woof","quack","meow","moo"], hint:"It sounds soft and purry."},
+      {textParts:["2 + 2 = ", "."], correctAnswer:"4", options:["3","5","4","2"], hint:"It’s one more than 3."},
+      {textParts:["Bananas are usually ", "."], correctAnswer:"yellow", options:["blue","yellow","purple","black"], hint:"Same color as the sun."},
+      {textParts:["A square has ", " sides."], correctAnswer:"4", options:["3","5","4","6"], hint:"Same as the number of wheels on a car."},
+      {textParts:["A dog says ", "."], correctAnswer:"woof", options:["meow","woof","quack","neigh"], hint:"It’s a barking sound."},
+      {textParts:["The opposite of hot is ", "."], correctAnswer:"cold", options:["warm","cold","big","tall"], hint:"Ice is this!"},
+      {textParts:["The sun rises in the ", "."], correctAnswer:"east", options:["north","west","east","south"], hint:"Opposite of west."},
+      {textParts:["An apple is usually ", "."], correctAnswer:"red", options:["blue","green","red","black"], hint:"Same color as a heart."},
+      {textParts:["Fish live in the ", "."], correctAnswer:"water", options:["trees","sand","water","sky"], hint:"They swim there."},
+      {textParts:["We use our eyes to ", "."], correctAnswer:"see", options:["smell","see","hear","taste"], hint:"What do you do when reading?"},
+      {textParts:["A cow gives us ", "."], correctAnswer:"milk", options:["eggs","milk","bread","wool"], hint:"You can drink it with cookies."},
+      {textParts:["Spiders have ", " legs."], correctAnswer:"8", options:["6","8","4","10"], hint:"It’s more than 6 but less than 10."},
+      {textParts:["The color of grass is ", "."], correctAnswer:"green", options:["red","yellow","green","blue"], hint:"Like leaves on trees."},
+      {textParts:["The moon comes out at ", "."], correctAnswer:"night", options:["day","night","morning","evening"], hint:"Opposite of day."},
+      {textParts:["A triangle has ", " sides."], correctAnswer:"3", options:["2","3","4","5"], hint:"It’s one more than 2."},
+      {textParts:["Birds build their ", "."], correctAnswer:"nests", options:["houses","nests","caves","holes"], hint:"They use twigs and leaves."},
+      {textParts:["The opposite of big is ", "."], correctAnswer:"small", options:["tiny","small","short","thin"], hint:"Little is another word for it."},
+      {textParts:["You wear shoes on your ", "."], correctAnswer:"feet", options:["hands","feet","head","ears"], hint:"They help you walk outside."},
+      {textParts:["Snow is ", "."], correctAnswer:"white", options:["black","red","white","green"], hint:"Same color as milk."}
+    ];
+
+    let current=0, total=questions.length;
+    const selected=new Array(total).fill(null);
+    const submitted=new Array(total).fill(false);
+
+    const sentenceDiv=document.getElementById('sentence');
+    const optionsDiv=document.getElementById('options');
+    const qnum=document.getElementById('qnum');
+    const totalSpan=document.getElementById('total');
+    const prevBtn=document.getElementById('prevBtn');
+    const nextBtn=document.getElementById('nextBtn');
+    const hintBtn=document.getElementById('hintBtn');
+    const hintBox=document.getElementById('hintBox');
+    const submitBtn=document.getElementById('submitBtn');
+    const status=document.getElementById('status');
+
+    totalSpan.textContent=total;
+
+    function renderQuestion(idx){
+      const q=questions[idx];
+      qnum.textContent=idx+1;
+
+      sentenceDiv.innerHTML='';
+      const before=document.createTextNode(q.textParts[0]);
+      const blank=document.createElement('span');
+      blank.className='blank';
+      blank.id='blankSpan';
+      if(selected[idx]){
+        blank.textContent=selected[idx];
+        blank.classList.add('filled');
+      } else blank.textContent='__________';
+      const after=document.createTextNode(q.textParts[1]);
+      sentenceDiv.append(before,blank,after);
+
+      optionsDiv.innerHTML='';
+      q.options.forEach(opt=>{
+        const b=document.createElement('button');
+        b.className='option'; b.textContent=opt;
+        b.onclick=()=>{
+          if(submitted[idx]) return;
+          selected[idx]=opt; renderQuestion(idx);
+          status.textContent=''; hintBox.style.display='none';
+        };
+        if(selected[idx]===opt){
+          b.style.background='#fff0d9';
+          b.style.borderColor='#ff9800';
+        }
+        optionsDiv.appendChild(b);
+      });
+
+      prevBtn.disabled=(idx===0);
+      nextBtn.disabled=(idx===total-1);
+
+      if(submitted[idx]){
+        const correct=selected[idx]===q.correctAnswer;
+        status.innerHTML=`<div class="result ${correct?'correct':'wrong'}">
+          ${correct?'🎉 Correct!':'❌ Oops!'} ${correct?'Great job!':'Answer: '+q.correctAnswer}
+        </div>`;
+      } else status.textContent='';
+    }
+
+    prevBtn.onclick=()=>{if(current>0){current--; hintBox.style.display='none'; renderQuestion(current);}};
+    nextBtn.onclick=()=>{if(current<total-1){current++; hintBox.style.display='none'; renderQuestion(current);}};
+    hintBtn.onclick=()=>{hintBox.style.display='block'; hintBox.textContent=questions[current].hint;};
+    submitBtn.onclick=()=>{
+      if(!selected[current]){
+        status.innerHTML='<div class="result wrong">Pick an option first!</div>'; return;
+      }
+      submitted[current]=true;
+      const isCorrect=selected[current]===questions[current].correctAnswer;
+      status.innerHTML=`<div class="result ${isCorrect?'correct':'wrong'}">
+        ${isCorrect?'🎉 Correct!':'❌ Oops!'} ${isCorrect?'Well done!':'Correct: '+questions[current].correctAnswer}
+      </div>`;
+    };
+
+    renderQuestion(current);
+  </script>
+</body>
+</html>

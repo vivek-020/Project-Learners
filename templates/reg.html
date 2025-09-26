@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<form action="log.html"method="post">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Register Form -->
+     <form action="/register" method="post">
+
+    <div id="register-form" style="display:none;">
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button class="btn">Register</button>
+      <span class="toggle-link" onclick="showLogin()">Already have an account? Login</span>
+    </div>
+
+     </form>
+  </div>
+  <script>
+          function showLogin() {
+          document.getElementById("login-form").style.display = "block";
+           document.getElementById("register-form").style.display = "none";
+           document.getElementById("form-title").innerText = "Login";
+    }
+  </script>
+  
+  </html> 

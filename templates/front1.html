@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Little Learners 🌈 Fun • Creativity • Learning</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      flex-direction: column;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("image.jpg") no-repeat center center;
+      background-size: cover;
+      filter: blur(15px) brightness(0.6);
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("https://i.ibb.co/MDCfxSfb/IMG-20250827-WA0001.jpg") no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    /* ---------- NAVBAR ---------- */
+    .navbar {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .navbar h2 {
+      font-size: 1.8rem;
+      background: linear-gradient(90deg, #ff4e50, #fc913a, #f9d423, #00c9ff, #92fe9d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      background: linear-gradient(90deg, #ff4e50, #fc913a, #f9d423);
+      color: black;
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    .container {
+      background: rgba(0, 0, 0, 0.55);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      width: 90%;
+      max-width: 800px;
+      margin-top: 120px; /* space below navbar */
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #ff4e50, #fc913a, #f9d423, #00c9ff, #92fe9d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 300% 300%;
+      animation: gradientFlow 6s ease infinite;
+      text-shadow: 3px 3px 8px rgba(0,0,0,0.6);
+      letter-spacing: 4px;
+      font-weight: bold;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    p {
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      line-height: 1.8;
+      color: #f9f9f9;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+      font-style: italic;
+    }
+
+    /* ---------- LOGIN BUTTON ---------- */
+    .login-btn {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(90deg, #ff4e50, #fc913a, #f9d423);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .login-btn:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.9);
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION BAR -->
+  <div class="navbar">
+    <h2>🌈 Little Learners</h2>
+     </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <h1>🌟 Little Learners 🌟</h1>
+    <p>It is designed to be easy for parents to use at home for homeschooling or to supplement preschool education.</p>
+  </div>
+
+  <span class="toggle-link">
+  <a href="{{ url_for('show_login') }}"></a>
+</span>
+  <!-- LOGIN BUTTON -->
+  <button class="login-btn" onclick="window.location.href='login1.html'">Login</button>
+</body>
+</html>

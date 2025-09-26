@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KidDoo - Play & Learn</title>
+  <style>
+    :root{
+      --accent:#ffcc00;
+      --soft:#fff6e0;
+      --card:#ffffffcc;
+      --muted:#6b6b6b;
+      --shadow: 0 10px 30px rgba(10,10,20,0.12);
+      font-family: 'Segoe UI', Roboto, system-ui, Arial;
+    }
+    html,body{height:100%;margin:0}
+    body{
+      background-image: url('https://i.ibb.co/2s0gkqv/cartoon-space-bg.jpg'); /* Replace with your cartoon background */
+      background-size: cover; background-position:center; background-repeat:no-repeat;
+      display:flex;align-items:center;justify-content:center;padding:20px;
+    }
+    .app{
+      width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,250,240,0.85));border-radius:18px;padding:18px;box-shadow:var(--shadow);
+    }
+    header{display:flex;align-items:center;gap:12px}
+    .logo{width:84px;height:84px;border-radius:14px;background:var(--card);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#333;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
+    h1{margin:0;font-size:24px}
+    p.lead{margin:0;color:var(--muted)}
+
+    /* Buttons area */
+    .controls{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+    .big-btn{
+      background:linear-gradient(180deg,#ffffff,#fff2cc);border-radius:50%;width:84px;height:84px;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.12);position:relative;overflow:visible;transition:transform .22s ease, box-shadow .22s ease;
+    }
+    .big-btn:hover{transform:translateY(-8px) rotate(-2deg);box-shadow:0 18px 30px rgba(0,0,0,0.18)}
+    .big-btn img{width:48px;height:48px;object-fit:contain;border-radius:10px}
+    .big-btn span{font-size:12px;margin-top:6px}
+
+    /* Moving toy */
+    .toy-wrap{position:absolute;right:22px;top:-36px;width:140px;height:140px}
+    .toy{width:120px;height:120px;border-radius:14px;background:linear-gradient(180deg,#ffdca6,#ffb36b);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,0.12);position:relative;overflow:visible;animation:toy-sway 3s ease-in-out infinite}
+    @keyframes toy-sway{0%{transform:translateX(0)}50%{transform:translateX(12px)}100%{transform:translateX(0)}}
+    .toy .hands{position:absolute;left:-18px;top:40px;width:20px;height:20px;border-radius:50%;background:#ffdfb0;box-shadow:inset 0 -3px 3px rgba(0,0,0,0.06)}
+    .toy .hand-right{left:auto;right:-18px;}
+    .toy .hand-left{animation:wave-left 1s ease-in-out infinite}
+    .toy .hand-right{animation:wave-right 1s ease-in-out infinite}
+    @keyframes wave-left{0%{transform:rotate(0)}50%{transform:rotate(-35deg)}100%{transform:rotate(0)}}
+    @keyframes wave-right{0%{transform:rotate(0)}50%{transform:rotate(35deg)}100%{transform:rotate(0)}}
+    /* Workspace */
+    .workspace{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
+    .sidebar{background:var(--card);padding:12px;border-radius:12px}
+    .main{background:var(--card);padding:12px;border-radius:12px;min-height:420px}
+
+    /* Sections */
+    .section{display:none}
+    .section.active{display:block}
+
+    /* Music keyboard */
+    .keyboard{display:flex;gap:6px;align-items:flex-end;padding:10px}
+    .key{width:46px;height:140px;border-radius:6px;display:flex;align-items:end;justify-content:center;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.09);user-select:none}
+    .key.white{background:white}
+    .key.black{background:#222;color:#fff;height:96px;margin-bottom:44px;width:34px;transform:translateY(-20px);position:relative;z-index:2}
+    .note-label{font-size:12px;margin-bottom:8px}
+
+    /* Blocks area */
+    .blocks-area{min-height:200px;border:2px dashed rgba(0,0,0,0.06);border-radius:8px;padding:10px;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+    .block{width:64px;height:64px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;cursor:grab}
+
+    /* Pretend play */
+    .play-area{min-height:240px;border-radius:8px;padding:8px;border:1px solid rgba(0,0,0,0.06);display:flex;gap:8px;flex-wrap:wrap}
+    .item{width:84px;height:84px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,0.06);cursor:grab}
+
+    /* Alphabet cards */
+    .cards{display:flex;flex-wrap:wrap;gap:10px}
+    .card{width:84px;height:110px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 8px 18px rgba(0,0,0,0.06);cursor:pointer}
+    .card .front{font-size:34px;font-weight:800}
+    .number{font-size:28px}
+
+    /* Videos */
+    .video-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+    video{width:100%;border-radius:8px;background:#000}
+
+    /* Stories carousel */
+    .story{display:flex;gap:8px;align-items:center}
+    .story img{width:220px;height:140px;border-radius:8px;object-fit:cover}
+    .controls-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+
+    @media (max-width:880px){
+      .workspace{grid-template-columns:1fr;}
+      .toy-wrap{position:relative;right:0;top:0;margin-left:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">🎈</div>
+      <div>
+        <h1>KidDoo</h1>
+        <p class="lead">Play, Learn &amp; Explore</p>
+      </div>
+      <div class="toy-wrap">
+        <div class="toy">
+          🤖
+          <div class="hands hand-left"></div>
+          <div class="hands hand-right"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div class="big-btn" onclick="showSection('music')">
+        <img src="https://i.ibb.co/DbcTb8P/music.png" alt="music"/>
+        <span>Music</span>
+      </div>
+      <div class="big-btn" onclick="showSection('pretend')">
+        <img src="https://i.ibb.co/fXz6jrH/pretend.png" alt="pretend"/>
+        <span>Pretend</span>
+      </div>
+      <div class="big-btn" onclick="showSection('blocks')">
+        <img src="https://i.ibb.co/VWMzHZY/blocks.png" alt="blocks"/>
+        <span>Blocks</span>
+      </div>
+      <div class="big-btn" onclick="showSection('abc')">
+        <img src="https://i.ibb.co/5GTqB3D/abc.png" alt="abc"/>
+        <span>ABC/123</span>
+      </div>
+      <div class="big-btn" onclick="showSection('videos')">
+        <img src="https://i.ibb.co/3zR7YF0/video.png" alt="video"/>
+        <span>Videos</span>
+      </div>
+      <div class="big-btn" onclick="showSection('stories')">
+        <img src="https://i.ibb.co/0V9LsHc/story.png" alt="story"/>
+        <span>Stories</span>
+      </div>
+    </div>
+
+    <div class="workspace">
+      <div class="sidebar">
+        <p>Click a button above to start playing and learning 🎉</p>
+      </div>
+      <div class="main">
+        <!-- Sections start here -->
+        <div id="music" class="section">
+          <h2>🎵 Music & Rhythm</h2>
+          <div class="keyboard">
+            <div class="key white" onclick="playSound('C')"><div class="note-label">C</div></div>
+            <div class="key black" onclick="playSound('C#')"></div>
+            <div class="key white" onclick="playSound('D')"><div class="note-label">D</div></div>
+            <div class="key black" onclick="playSound('D#')"></div>
+            <div class="key white" onclick="playSound('E')"><div class="note-label">E</div></div>
+            <div class="key white" onclick="playSound('F')"><div class="note-label">F</div></div>
+            <div class="key black" onclick="playSound('F#')"></div>
+            <div class="key white" onclick="playSound('G')"><div class="note-label">G</div></div>
+          </div>
+        </div>
+
+        <div id="pretend" class="section">
+          <h2>🎭 Pretend Play</h2>
+          <div class="play-area">
+            <div class="item">🍎</div>
+            <div class="item">🚗</div>
+            <div class="item">🐶</div>
+            <div class="item">🎂</div>
+          </div>
+        </div>
+
+        <div id="blocks" class="section">
+          <h2>🧱 Building Blocks</h2>
+          <div class="blocks-area" id="blocksArea"></div>
+          <button onclick="addBlock()">Add Block</button>
+        </div>
+        <div id="abc" class="section">
+          <h2>🔤 Alphabets & Numbers</h2>
+          <div class="cards">
+            <div class="card"><div class="front">A</div></div>
+            <div class="card"><div class="front">B</div></div>
+            <div class="card"><div class="front">C</div></div>
+            <div class="card"><div class="front number">1</div></div>
+            <div class="card"><div class="front number">2</div></div>
+            <div class="card"><div class="front number">3</div></div>
+          </div>
+        </div>
+
+        <div id="videos" class="section">
+          <h2>🎥 Learning Videos</h2>
+          <div class="video-list">
+            <!-- Replace src with your own video files -->
+            <video controls>
+              <source src="yourvideo1.mp4" type="video/mp4" />
+            </video>
+            <video controls>
+              <source src="yourvideo2.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+
+        <div id="stories" class="section">
+          <h2>📖 Short Stories</h2>
+          <div class="story">
+            <img src="https://i.ibb.co/QMwwk9C/story1.jpg" alt="story1"/>
+            <p>Once upon a time, there was a little bunny who loved carrots...</p>
+          </div>
+          <div class="controls-row">
+            <button onclick="prevStory()">Prev</button>
+            <button onclick="nextStory()">Next</button>
+          </div>
+        </div>
+        <!-- Sections end -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSection(id){
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function playSound(note){
+      let audio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
+      audio.play();
+    }
+
+    function addBlock(){
+      const colors = ['#ff6b6b','#6bcB77','#4d96ff','#ffb84d'];
+      const block = document.createElement('div');
+      block.className = 'block';
+      block.style.background = colors[Math.floor(Math.random()*colors.length)];
+      block.innerText = '⬜';
+      document.getElementById('blocksArea').appendChild(block);
+    }
+
+    let storyIndex = 0;
+    const stories = [
+      {img:"https://i.ibb.co/QMwwk9C/story1.jpg",text:"Once upon a time, there was a little bunny who loved carrots..."},
+      {img:"https://i.ibb.co/0F5hLwm/story2.jpg",text:"The brave lion saved his friends in the jungle..."},
+      {img:"https://i.ibb.co/5c7bM0F/story3.jpg",text:"A tiny bird learned to fly high in the sky..."}
+    ];
+    function showStory(){
+      const s = stories[storyIndex];
+      const storyDiv = document.querySelector('#stories .story');
+      storyDiv.innerHTML = `<img src="${s.img}" alt="story"/><p>${s.text}</p>`;
+    }
+    function nextStory(){
+      storyIndex = (storyIndex+1)%stories.length;
+      showStory();
+    }
+    function prevStory(){
+      storyIndex = (storyIndex-1+stories.length)%stories.length;
+      showStory();
+    }
+  </script>
+</body>
+</html>

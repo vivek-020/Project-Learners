@@ -1,0 +1,16 @@
+
+<html>
+  {% extends "base.html" %}
+{% block content %}
+<form action="/register" method="post">
+  <input type="text" name="fullname" placeholder="Full Name" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="text" name="username" placeholder="Username" required>
+  <input type="password" name="password" placeholder="Password" required>
+  <button class="btn">Register</button>
+</form>
+
+<span class="toggle-link">
+  <a href="{{ url_for('log') }}">Already have an account? Login</a>
+</span>
+{% endblock %}

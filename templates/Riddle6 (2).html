@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fun Riddles for Kids (Age 6)</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Comic Sans MS", "Segoe UI", sans-serif;
+    background: linear-gradient(to top, #a8edea, #fed6e3);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Floating cartoon-style clouds */
+  .cloud {
+    position: absolute;
+    background: #fff;
+    background: radial-gradient(circle at 30% 30%, #fff 70%, #f1f1f1 100%);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: floatClouds 60s linear infinite;
+  }
+
+  .cloud1 { width: 200px; height: 100px; top: 50px; left: -200px; animation-delay: 0s; }
+  .cloud2 { width: 150px; height: 80px; top: 120px; left: -150px; animation-delay: 10s; }
+  .cloud3 { width: 180px; height: 90px; top: 200px; left: -180px; animation-delay: 20s; }
+
+  @keyframes floatClouds {
+    from { transform: translateX(0); }
+    to { transform: translateX(120vw); }
+  }
+
+  .quiz-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 26px;
+  }
+
+  .question {
+    margin: 15px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #444;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .option {
+    background: #fafafa;
+    border: 2px solid transparent;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .option:hover {
+    background: #f1f1f1;
+    transform: scale(1.03);
+  }
+
+  .option.correct {
+    border-color: #22c55e;
+    background: #e6fff3;
+  }
+
+  .option.wrong {
+    border-color: #ef4444;
+    background: #ffe6e6;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+    color: #333;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: linear-gradient(90deg, #f6d365, #fda085);
+    transform: scale(1.05);
+  }
+
+  .hint {
+    display: none;
+    background: #fff7e6;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px dashed #f59e0b;
+    color: #8a5700;
+  }
+
+  .score {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+</style>
+
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>🧩 Fun Riddles for age 6 Kids</h1>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="hint" id="hint"></div>
+    <div class="controls">
+      <button id="prevBtn">⟵ Previous</button>
+      <button id="hintBtn">💡 Hint</button>
+      <button id="nextBtn">Next ⟶</button>
+      <button id="submitBtn">✅ Submit</button>
+    </div>
+    <div class="score" id="score"></div>
+  </div>
+
+  <script>
+    // Riddles
+    const riddles = [
+      { q: "What has to be broken before you can use it?", options: ["Egg", "Balloon", "Rock", "Banana"], answer: "Egg", hint: "It's often for breakfast!" },
+      { q: "What has a face and two hands but no arms or legs?", options: ["Clock", "Pillow", "Robot", "Tree"], answer: "Clock", hint: "It tells you the time." },
+      { q: "What gets wetter the more it dries?", options: ["Towel", "Sponge", "Rain", "Soap"], answer: "Towel", hint: "You use it after a bath." },
+      { q: "I’m full of keys but can’t open any doors. What am I?", options: ["Piano", "Map", "Backpack", "Treasure chest"], answer: "Piano", hint: "You can play music on me." },
+      { q: "Which letter of the alphabet has the most water?", options: ["C", "A", "B", "D"], answer: "C", hint: "Sounds like the sea!" },
+      { q: "What has a neck but no head?", options: ["Bottle", "Snake", "Shirt", "Road"], answer: "Bottle", hint: "It can hold water or juice." },
+      { q: "I go up and down but never move. What am I?", options: ["Stairs", "Kite", "Elevator", "Ball"], answer: "Stairs", hint: "You step on me at home or school." },
+      { q: "What has many teeth but cannot bite?", options: ["Comb", "Shark", "Zipper", "Leaf"], answer: "Comb", hint: "You use it on your hair." },
+      { q: "You can catch me but can’t throw me. What am I?", options: ["A cold", "Ball", "Butterfly", "Fish"], answer: "A cold", hint: "You might sneeze if you have me." },
+      { q: "Where does Friday come before Thursday?", options: ["Dictionary", "School", "Calendar", "Park"], answer: "Dictionary", hint: "Words are in me, not dates!" },
+
+      // Extra 10 riddles
+      { q: "What has four legs but can’t walk?", options: ["Chair", "Dog", "Table", "Car"], answer: "Chair", hint: "You sit on it." },
+      { q: "What has ears but cannot hear?", options: ["Corn", "Cat", "Cup", "Wall"], answer: "Corn", hint: "It grows on a farm." },
+      { q: "I’m light as a feather, yet the strongest person can’t hold me for long. What am I?", options: ["Breath", "Balloon", "Cloud", "Leaf"], answer: "Breath", hint: "You breathe me in and out." },
+      { q: "The more of me you take, the more you leave behind. What am I?", options: ["Footsteps", "Coins", "Time", "Sand"], answer: "Footsteps", hint: "Walking makes me appear." },
+      { q: "What has one eye but cannot see?", options: ["Needle", "Cyclops", "Storm", "Camera"], answer: "Needle", hint: "You use it for sewing." },
+      { q: "What can travel around the world while staying in one corner?", options: ["Stamp", "Ball", "Sun", "Moon"], answer: "Stamp", hint: "It's small and sticks to letters." },
+      { q: "I’m tall when I’m young and short when I’m old. What am I?", options: ["Candle", "Tree", "Tower", "Pencil"], answer: "Candle", hint: "I melt away with fire." },
+      { q: "What has hands but cannot clap?", options: ["Clock", "Monkey", "Doll", "Statue"], answer: "Clock", hint: "It ticks all day." },
+      { q: "What is always in front of you but can’t be seen?", options: ["Future", "Air", "Shadow", "Sun"], answer: "Future", hint: "It hasn’t happened yet." },
+      { q: "The more you take from me, the bigger I get. What am I?", options: ["Hole", "Box", "Bag", "Shadow"], answer: "Hole", hint: "Digging makes me larger." }
+    ];
+
+    // Shuffle helper
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    // Shuffle questions and options
+    const QUESTIONS = shuffle(riddles).map(q => ({
+      ...q,
+      options: shuffle(q.options)
+    }));
+
+    let current = 0;
+    let chosen = Array(QUESTIONS.length).fill(null);
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const hintEl = document.getElementById("hint");
+    const scoreEl = document.getElementById("score");
+
+    function render() {
+      const q = QUESTIONS[current];
+      questionEl.textContent = `Q${current + 1}: ${q.q}`;
+      optionsEl.innerHTML = "";
+      hintEl.style.display = "none";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("div");
+        btn.className = "option";
+        btn.textContent = opt;
+        btn.onclick = () => {
+          chosen[current] = opt;
+          if (opt === q.answer) {
+            btn.classList.add("correct");
+          } else {
+            btn.classList.add("wrong");
+          }
+          // disable further clicks
+          Array.from(optionsEl.children).forEach(b => b.onclick = null);
+        };
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    document.getElementById("prevBtn").onclick = () => {
+      if (current > 0) current--;
+      render();
+    };
+    document.getElementById("nextBtn").onclick = () => {
+      if (current < QUESTIONS.length - 1) current++;
+      render();
+    };
+    document.getElementById("hintBtn").onclick = () => {
+      hintEl.style.display = hintEl.style.display === "none" ? "block" : "none";
+      hintEl.textContent = "Hint: " + QUESTIONS[current].hint;
+    };
+    document.getElementById("submitBtn").onclick = () => {
+      let score = 0;
+      for (let i = 0; i < QUESTIONS.length; i++) {
+        if (chosen[i] === QUESTIONS[i].answer) score++;
+      }
+      scoreEl.textContent = `You got ${score} out of ${QUESTIONS.length}!`;
+    };
+
+    render();
+  </script>
+</body>
+</html>

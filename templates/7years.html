@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun Learning</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      margin: 0;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 40px;
+      color: #ff4081;
+      margin-bottom: 40px;
+      animation: bounce 1.5s infinite;
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 20px;
+      padding: 20px 40px;
+      font-size: 24px;
+      color: white;
+      background: #4CAF50;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .btn:hover {
+      background: #388e3c;
+      transform: scale(1.1);
+    }
+
+    .riddle {
+      background: #ff9800;
+    }
+    
+
+    .quiz {
+      background: #2196F3;
+    }
+    .home {
+    background: #9c27b0; /* purple */
+    margin-top: 30px;
+  }
+  .home:hover {
+    background: #7b1fa2;
+    transform: scale(1.1);
+  }
+
+    .emoji {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    
+  </style>
+</head>
+<button class="btn home" onclick="window.location.href='/home'">
+  🏠 Home
+</button>
+<body>
+  <h1>🎉 Welcome Kids! 🎉</h1>
+  <p style="font-size:20px;">Choose what you want to play today:</p>
+
+  <button class="btn riddle" onclick="window.location.href='/Riddle'">
+    <span class="emoji">🧩</span> Riddle Time
+  </button>
+
+  <button class="btn quiz" onclick="window.location.href='/7q'">
+    <span class="emoji">❓</span> Quiz Fun
+  </button>
+  <button class="btn" onclick="window.location.href='/7p'">
+    <span class="emoji">😺</span> Puzzles
+  </button>
+</body>
+</html>

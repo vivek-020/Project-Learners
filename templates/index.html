@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<form action="res.html"method="post">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Little Learners</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff4e50, #fc913a, #f9d423, #00c9ff, #92fe9d);
+      background-size: 300% 300%;
+      animation: gradientFlow 10s ease infinite;
+      position: relative;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .form-container {
+      background: rgba(0,0,0,0.75);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      text-align: center;
+      width: 350px;
+      color: #fff;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    .welcome {
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      color: #ddd;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(90deg, #ff4e50, #fc913a, #f9d423);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+    }
+
+    .toggle-link, .forgot-link {
+      color: #00c9ff;
+      cursor: pointer;
+      display: block;
+      margin-top: 12px;
+      text-decoration: underline;
+      font-size: 0.9rem;
+    }
+
+    /* Top-left back button */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(90deg, #00c9ff, #92fe9d);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+<body>
+  <!-- Back Button (top-left) -->
+  <button class="back-btn" onclick="window.location.href='front1.html'">⬅ Back</button>
+
+  <div class="form-container">
+    <h2 id="form-title">Login</h2>
+    <p class="welcome">Welcome back! Please login to continue learning 🌟</p>
+    <!-- Login Form -->
+     <form action="/login" method="post">
+
+    <div id="login-form">
+      <input type="text" placeholder="Username" required>
+      <input type="password" placeholder="Password" required>
+      <button class="btn" onclick="window.location.href='inavtar.html'">Login</button>
+      <span class="forgot-link">Forgot Password?</span>
+      <span class="toggle-link" onclick="showRegister()">Don't have an account? Register</span>
+    </div>
+     </form>
+
+    <!-- Register Form -->
+     <form action="/register" method="post">
+
+    <div id="register-form" style="display:none;">
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button class="btn">Register</button>
+      <span class="toggle-link" onclick="showLogin()">Already have an account? Login</span>
+    </div>
+     </form>
+  </div>
+
+  <script>
+    function showRegister() {
+      document.getElementById("login-form").style.display = "none";
+      document.getElementById("register-form").style.display = "block";
+      document.getElementById("form-title").innerText = "Register";
+    }
+
+    function showLogin() {
+      document.getElementById("login-form").style.display = "block";
+      document.getElementById("register-form").style.display = "none";
+      document.getElementById("form-title").innerText = "Login";
+    }
+  </script>
+</form>
+</body>
+</html>

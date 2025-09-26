@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kids Learning - Rhymes</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", cursive;
+      text-align: center;
+      background: linear-gradient(135deg, #f9f7d9, #fcd1d1, #c1f8cf, #a0e7e5);
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #ff4081;
+      margin-bottom: 15px;
+    }
+    .selector {
+      margin: 15px auto;
+      font-size: 1.2rem;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #ff80ab;
+    }
+    .rhyme-box {
+      background: #fff8e7;
+      border-radius: 20px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 500px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+    button {
+      font-size: 1rem;
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: #ff80ab;
+      color: white;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #f06292;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌈 Fun Rhymes for Kids 🎶</h1>
+
+  <!-- Dropdown to choose rhyme -->
+  <label for="rhymeSelect"><b>Choose a Rhyme:</b></label>
+  <select id="rhymeSelect" class="selector">
+    <option value="">-- Select a Rhyme --</option>
+    <option value="twinkle">Twinkle, Twinkle Little Star</option>
+    <option value="baabaablack">Baa Baa Black Sheep</option>
+    <option value="jackjill">Jack and Jill</option>
+    <option value="hump">Humpty Dumpty</option>
+  </select>
+
+  <!-- Display area -->
+  <div class="rhyme-box" id="rhymeBox">
+    🎵 Select a rhyme to see and hear it here! 🎵
+  </div>
+
+  <!-- Controls -->
+  <div>
+    <button onclick="playRhyme()">▶ Play Rhyme</button>
+    <button onclick="stopRhyme()">⏹ Stop Voice</button>
+    <button onclick="location.reload()">🔄 Play Again</button>
+    <button onclick="goHome()">🏠 Go Home</button>
+  </div>
+
+  <script>
+    const rhymeBox = document.getElementById("rhymeBox");
+    const rhymeSelect = document.getElementById("rhymeSelect");
+    let currentUtterance = null;
+
+    // Rhyme collection
+    const rhymes = {
+      twinkle: `Twinkle, twinkle, little star,
+How I wonder what you are!
+Up above the world so high,
+Like a diamond in the sky.`,
+
+      baabaablack: `Baa, baa, black sheep,
+Have you any wool?
+Yes sir, yes sir,
+Three bags full.`,
+
+      jackjill: `Jack and Jill went up the hill
+To fetch a pail of water;
+Jack fell down and broke his crown,
+And Jill came tumbling after.`,
+
+      hump: `Humpty Dumpty sat on a wall,
+Humpty Dumpty had a great fall;
+All the king's horses and all the king's men
+Couldn't put Humpty together again.`
+    };
+
+    // Update rhyme display
+    rhymeSelect.addEventListener("change", () => {
+      const selected = rhymeSelect.value;
+      rhymeBox.innerText = selected ? rhymes[selected] : "🎵 Select a rhyme to see and hear it here! 🎵";
+    });
+
+    // Play rhyme with speech
+    function playRhyme() {
+      stopRhyme(); // stop if already speaking
+      const selected = rhymeSelect.value;
+      if (!selected) {
+        alert("Please select a rhyme first!");
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(rhymes[selected]);
+      utterance.pitch = 1.2; // slightly higher pitch for kid-friendly
+      utterance.rate = 0.9; // slower and clearer
+      utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes("Google UK English Female")) 
+                      || speechSynthesis.getVoices()[0];
+      speechSynthesis.speak(utterance);
+      currentUtterance = utterance;
+    }
+
+    // Stop voice
+    function stopRhyme() {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+      }
+      currentUtterance = null;
+    }
+
+    // Go Home (example)
+    function goHome() {
+      alert("This will redirect to Home Page! (link your home.html here)");
+      // window.location.href = "home.html";
+    }
+  </script>
+
+</body>
+</html>

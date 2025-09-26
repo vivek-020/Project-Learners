@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alphabet Matching Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .card {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      margin: 10px;
+      font-size: 32px;
+      background-color: #f0f0f0;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .matched {
+      background-color: #90ee90;
+      cursor: default;
+    }
+    .selected {
+      background-color: #add8e6;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Alphabet Matching Game</h2>
+<p>Click two cards to find matching uppercase and lowercase letters.</p>
+
+<div id="game"></div>
+
+<script>
+  const letters = [
+    {upper: 'A', lower: 'a'},
+    {upper: 'B', lower: 'b'},
+    {upper: 'C', lower: 'c'},
+    {upper: 'D', lower: 'd'},
+    {upper: 'E', lower: 'e'}
+  ];
+
+  // Create cards array with uppercase and lowercase letters
+  let cards = [];
+  letters.forEach(pair => {
+    cards.push({letter: pair.upper, type: 'upper'});
+    cards.push({letter: pair.lower, type: 'lower'});
+  });
+
+  // Shuffle cards
+  function shuffle(array) {
+    for (let i = array.length -1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i+1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+  shuffle(cards);
+
+  const gameDiv = document.getElementById('game');
+  let selectedCards = [];
+  let matchedCount = 0;
+
+  function createCard(card, index) {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.textContent = card.letter;
+    div.dataset.index = index;
+    div.addEventListener('click', () => {
+      if (div.classList.contains('matched') || selectedCards.length === 2 || selectedCards.includes(div)) {
+        return;
+      }
+      div.classList.add('selected');
+      selectedCards.push(div);
+
+      if (selectedCards.length === 2) {
+        checkMatch();
+      }
+    });
+    return div;
+  }
+
+  function checkMatch() {
+    const [card1, card2] = selectedCards;
+    const idx1 = card1.dataset.index;
+    const idx2 = card2.dataset.index;
+    const c1 = cards[idx1];
+    const c2 = cards[idx2];
+
+    // Check if letters match ignoring case and one is upper, other is lower
+    if (c1.letter.toLowerCase() === c2.letter.toLowerCase() && c1.type !== c2.type) {
+      card1.classList.add('matched');
+      card2.classList.add('matched');
+      matchedCount += 2;
+      if (matchedCount === cards.length) {
+        setTimeout(() => alert('Great job! You matched all letters!'), 200);
+      }
+    } else {
+      setTimeout(() => {
+        card1.classList.remove('selected');
+        card2.classList.remove('selected');
+      }, 1000);
+    }
+    selectedCards = [];
+  }
+
+  // Initialize game
+  cards.forEach((card, index) => {
+    gameDiv.appendChild(createCard(card, index));
+  });
+</script>
+
+</body>
+</html>

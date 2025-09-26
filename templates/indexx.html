@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kids Learning App – Age 4 Module</title>
+  <meta name="description" content="Interactive, age-appropriate learning activities for 4-year-old kids: alphabets, counting, colors & shapes, matching, tracing, rewards." />
+  <style>
+    :root{
+      --bg: #FFF7E9;
+      --card: #FFFFFF;
+      --primary: #FF8A00;
+      --primary-2: #FFB703;
+      --accent: #5E60CE;
+      --text: #2B2D42;
+      --good: #2ecc71;
+      --bad: #e74c3c;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;}
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 500px at 10% -10%, #FFF3C4 0%, #FFF7E9 40%, #FFF7E9 100%);
+      color: var(--text);
+      -webkit-tap-highlight-color: transparent;
+    }
+    header{
+      position: sticky; top:0; z-index:10;
+      background:rgb(227, 139, 14);
+      color:#fff; padding: 14px 16px; display:flex; align-items:center; gap:12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12);
+    }
+    .brand{font-weight:800; letter-spacing:.3px; font-size: clamp(18px, 3.2vw, 28px)}
+    .spacer{flex:1}
+    .pill{background: rgba(200,200,200,.2); border:2px solid rgba(255,255,255,.35); padding:8px 12px; border-radius:999px; display:flex; align-items:center; gap:8px; font-weight:700}
+    .btn{cursor:pointer; border:none; border-radius:16px; padding:12px 16px; font-weight:700; font-size:18px; background: var(--accent); color:#fff; box-shadow:0 6px 14px rgba(0,0,0,.12)}
+    .btn.secondary{ background:#fff; color: var(--accent); border:2px solid var(--accent)}
+    .btn.ghost{ background: transparent; color:#fff; border:2px solid rgba(100,100,100,.5)}
+    
+    .wrap{max-width:1100px; margin: 0 auto; padding: 18px 16px 60px}
+
+    /* Home grid */
+    .grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:16px}
+    .card{background:var(--card); border-radius:24px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,.08); transition: transform .15s ease, box-shadow .15s ease; display:flex; flex-direction:column; justify-content:space-between; min-height:170px}
+    .card:hover{transform: translateY(-2px); box-shadow:0 12px 30px rgba(0,0,0,.12)}
+    .card {margin:6px 0 8px; font-size:20px}
+    .card p{margin:0; opacity:.8}
+    .big-emoji{font-size:44px}
+
+    .screens{position:relative}
+    .screen{display:none; animation: fade .2s ease}
+    .screen.active{display:block}
+    @keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+    .toolbar{display:flex; gap:8px; align-items:center; margin: 10px 0 18px}
+    .toolbar .back{background:#fff; border:2px solid #eee; color:#333}
+
+    .panel{background:#fff; border-radius:24px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08)}
+
+    /* ALPHABET */
+    .alpha-main{display:grid; grid-template-columns: 1.1fr .9fr; gap:16px}
+    .alpha-letter{font-size: clamp(90px, 16vw, 160px); font-weight: 900; line-height: .9; text-align:center; background: linear-gradient(180deg,#222,#666); -webkit-background-clip:text; -webkit-text-fill-color: transparent}
+    .alpha-word{font-size: clamp(22px, 3vw, 30px); text-align:center}
+    .alpha-keys{display:grid; grid-template-columns: repeat(13,1fr); gap:6px}
+    .alpha-keys button{padding:10px; border-radius:12px; border:2px solid #eee; background:#fafafa; font-weight:900; font-size:18px}
+
+    /* COUNTING */
+    .count-items{font-size:40px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:8px}
+    .choices{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+    .choices button{font-size:20px}
+
+    /* COLOR & SHAPE */
+    .palette{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:8px 0 14px}
+    .swatch{width:40px; height:40px; border-radius:12px; border:2px solid rgba(0,0,0,.08); cursor:pointer}
+    .shapes{display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:16px; place-items:center}
+    svg.shape{width:160px; height:160px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.1))}
+<button>dd<button/>
+    /* MATCH GAME (tap-to-match for touch support) */
+    .match-wrap{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+    .list{background:#fff; border-radius:24px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    .item{display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; border:2px dashed #eee; border-radius:16px; margin:8px 0; font-size:28px; cursor:pointer}
+    .target{opacity:.7}
+    .matched{background:#E9FCEB; border:2px solid #b6f3bf}
+
+    /* TRACING */
+    .trace-wrap{display:grid; grid-template-columns: 1fr; gap:12px}
+    .trace-board{position:relative; border-radius:24px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    .trace-bg{position:absolute; inset:0; display:grid; place-items:center; font-weight:900; font-size: clamp(180px, 30vw, 280px); color: rgba(0,0,0,.06); user-select:none}
+    canvas{display:block; width:100%; height:400px; background:#fff; touch-action:none}
+
+    /* FEEDBACK */
+    .toast{position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 14px; border-radius:999px; font-weight:700; opacity:0; pointer-events:none; transition:.2s}
+    .toast.show{opacity:1}
+
+    /* CONFETTI */
+    .confetti{position:fixed; top:-20px; font-size:24px; animation: fall linear forwards;}
+    @keyframes fall{to{transform: translateY(110vh) rotate(260deg); opacity:.9}}
+
+    /* Utilities */
+    .center{text-align:center}
+    .muted{opacity:.7}
+    .success{color:var(--good)}
+    .error{color:var(--bad)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">🧸 Kids Learning • Age 4</div>
+    <div class="spacer"></div>
+    <div class="pill" id="starPill" aria-live="polite">⭐ <span id="stars">0</span> Stickers</div>
+    <button class="btn ghost" id="muteBtn" aria-pressed="false" title="Toggle Voice">🔊 Voice</button>
+  </header>
+
+  <main class="wrap">
+    <!-- HOME -->
+    <section id="home" class="screen active" aria-label="Home">
+      <div class="center" style="margin-bottom:12px">
+        <p class="muted">Tap an activity to start. Earn ⭐ stickers as you play!</p>
+      </div>
+      <div class="grid">
+        <div class="card" role="button" tabindex="0" onclick="openScreen('alpha')" aria-label="Alphabet and Phonics">
+          <div>
+            <div class="big-emoji">🔤</div>
+            <h3>Alphabet & Phonics</h3>
+            <p>Hear letters, words, and sounds.</p>
+          </div>
+        </div>
+        <div class="card" role="button" tabindex="0" onclick="openScreen('count')" aria-label="Counting 1 to 10">
+          <div>
+            <div class="big-emoji">🔢</div>
+            <h3>Count 1–10</h3>
+            <p>Count objects & choose the right number.</p>
+          </div>
+        </div>
+        <div class="card" role="button" tabindex="0" onclick="openScreen('paint')" aria-label="Colors and Shapes">
+          <div>
+            <div class="big-emoji">🎨</div>
+            <h3>Colors & Shapes</h3>
+            <p>Pick colors and paint shapes.</p>
+          </div>
+        </div>
+        <div class="card" role="button" tabindex="0" onclick="openScreen('match')" aria-label="Matching Game">
+          <div>
+            <div class="big-emoji">🧩</div>
+            <h3>Match the Friends</h3>
+            <p>Match animals to their names.</p>
+          </div>
+        </div>
+        <div class="card" role="button" tabindex="0" onclick="openScreen('trace')" aria-label="Letter Tracing">
+          <div>
+            <div class="big-emoji">✏️</div>
+            <h3>Trace Letters</h3>
+            <p>Draw on the big letter.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALPHABET & PHONICS -->
+    <section id="alpha" class="screen" aria-label="Alphabet & Phonics">
+      <div class="toolbar">
+        <button class="btn back" onclick="openScreen('home')">🏠 Home</button>
+        <div class="spacer"></div>
+        <button class="btn" onclick="alphaPrev()">◀️ Prev</button>
+        <button class="btn" onclick="alphaSpeak()">🔊 Say it</button>
+         <button class="btn" onclick="alphaNext()">Next ▶️</button>
+         <button class="btn" onclick="window.location.href='login.html'"">Next ▶️</button>
+
+        <button class="btn" onclick="alphaNext()">New🆕</button>  
+
+
+      </div>
+      <div class="panel alpha-main">
+        <div>
+          <div id="alphaLetter" class="alpha-letter">A</div>
+          <div id="alphaWord" class="alpha-word">Apple 🍎</div>
+        </div>
+        <div>
+          <p class="muted center">Tap a letter</p>
+          <div class="alpha-keys" id="alphaKeys"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COUNTING 1-10 -->
+    <section id="count" class="screen" aria-label="Counting 1 to 10">
+      <div class="toolbar">
+        <button class="btn back" onclick="openScreen('home')">🏠 Home</button>
+        <div class="spacer"></div>
+        <button class="btn" onclick="newCountingRound()">🔁 New</button>
+      </div>
+      <div class="panel">
+        <h3 class="center" id="countPrompt">How many do you see?</h3>
+        <div id="countItems" class="count-items" aria-live="polite"></div>
+        <div class="choices" id="countChoices"></div>
+        <p id="countFeedback" class="center"></p>
+      </div>
+    </section>
+
+    <!-- COLORS & SHAPES (Paint) -->
+    <section id="paint" class="screen" aria-label="Colors and Shapes">
+      <div class="toolbar">
+        <button class="btn back" onclick="openScreen('home')">🏠 Home</button>
+        <div class="spacer"></div>
+        <button class="btn" onclick="resetPaint()">🧼 Clear </button> 
+	<button class="btn" onclick="alphaNext()"><a href="colors.html">New🆕<a/></button>
+
+      </div>
+      <div class="panel">
+        <p class="center muted">Pick a color, then tap a shape to paint it.</p>
+        <div class="palette" id="palette"></div>
+        <div class="shapes">
+          <svg class="shape" viewBox="0 0 200 200"><circle id="shape-circle" cx="100" cy="100" r="70" fill="#ffffff" stroke="#ddd" stroke-width="6"/></svg>
+          <svg class="shape" viewBox="0 0 200 200"><rect id="shape-square" x="40" y="40" width="120" height="120" rx="18" fill="#ffffff" stroke="#ddd" stroke-width="6"/></svg>
+          <svg class="shape" viewBox="0 0 200 200"><polygon id="shape-triangle" points="100,30 170,170 30,170" fill="#ffffff" stroke="#ddd" stroke-width="6"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCHING GAME (tap-to-match) -->
+    <section id="match" class="screen" aria-label="Matching Game">
+      <div class="toolbar">
+        <button class="btn back" onclick="openScreen('home')">🏠 Home</button>
+        <div class="spacer"></div>
+        <button class="btn" onclick="resetMatch()">🔄 Restart</button>
+                
+        <button class="btn" onclick="location.href='text.html'">🆕 new<a/></button>
+      </div>
+      <div class="match-wrap">
+        <div class="list">
+          <h4 class="center">Friends</h4>
+          <div class="item" data-key="cat" onclick="selectFriend(this)">🐱 Cat</div>
+          <div class="item" data-key="dog" onclick="selectFriend(this)">🐶 Dog</div>
+          <div class="item" data-key="fish" onclick="selectFriend(this)">🐟 Fish</div>
+        </div>
+        <div class="list">
+          <h4 class="center">Match here</h4>
+          <div class="item target" data-key="dog" onclick="placeTo(this)">Dog</div>
+          <div class="item target" data-key="fish" onclick="placeTo(this)">Fish</div>
+          <div class="item target" data-key="cat" onclick="placeTo(this)">Cat</div>
+        </div>
+      </div>
+      <p id="matchFeedback" class="center"></p>
+    </section>
+
+    <!-- TRACING -->
+    <section id="trace" class="screen" aria-label="Letter Tracing">
+      <div class="toolbar">
+        <button class="btn back" onclick="openScreen('home')">🏠 Home</button>
+        <div class="spacer"></div>
+        <button class="btn" onclick="prevTrace()">◀️ Prev</button>
+        <button class="btn" onclick="clearTrace()">🧼 Clear</button>
+        <button class="btn" onclick="nextTrace()">Next ▶️</button>
+      </div>
+      <div class="panel trace-wrap">
+        <div class="trace-board">
+          <div class="trace-bg" id="traceBg">A</div>
+          <canvas id="traceCanvas" width="900" height="400" aria-label="Tracing area"></canvas>
+        </div>
+        <p class="center muted">Use your finger or mouse to trace the big letter.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /********************* CORE APP STATE *********************/
+    const screens = ["home","alpha","count","paint","match","trace"];
+    const store = {
+      stars: 0,
+      completed: { alpha:false, count:false, paint:false, match:false, trace:false },
+      muted: false
+    };
+    // Load from localStorage
+    (function initStore(){
+      try{
+        const raw = localStorage.getItem('kids4_app');
+        if(raw){ Object.assign(store, JSON.parse(raw)); }
+      }catch(e){}
+      updateStarsUI(); updateMuteUI();
+    })();
+    function saveStore(){ try{ localStorage.setItem('kids4_app', JSON.stringify(store)); }catch(e){} }
+
+    function openScreen(id){
+      screens.forEach(s=> document.getElementById(s).classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      // lazy inits
+      if(id==='alpha') alphaMount();
+      if(id==='count') newCountingRound();
+      if(id==='paint') mountPaint();
+      if(id==='match') resetMatch();
+      if(id==='trace') mountTrace();
+    }
+
+    function toast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'), 1200);
+    }
+
+    function celebrate(){
+      const emojis = ['🎉','✨','🎊','⭐','💫','🌈'];
+      for(let i=0;i<20;i++){
+        const s = document.createElement('div');
+        s.className='confetti';
+        s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        s.style.left = Math.random()*100+'vw';
+        s.style.animationDuration = (1.2 + Math.random()*1.2)+'s';
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(), 2200);
+      }
+    }
+
+    function awardStar(activity){
+      if(store.completed[activity]) return; // one-time per activity
+      store.completed[activity] = true;
+      store.stars += 1; saveStore(); updateStarsUI();
+      celebrate(); toast('⭐ Yay! You earned a sticker!');
+    }
+
+    function updateStarsUI(){ document.getElementById('stars').textContent = store.stars; }
+
+    // Voice helpers
+    const voice = {
+      speak(txt){ if(store.muted) return; try{ const u = new SpeechSynthesisUtterance(txt); window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);}catch(e){} }
+    }
+
+    document.getElementById('muteBtn').addEventListener('click',()=>{
+      store.muted = !store.muted; saveStore(); updateMuteUI();
+    });
+    function updateMuteUI(){
+      const b = document.getElementById('muteBtn');
+      b.setAttribute('aria-pressed', String(store.muted));
+      b.textContent = store.muted ? '🔇 Muted' : '🔊 Voice';
+    }
+
+    /********************* ALPHABET & PHONICS *********************/
+    const ALPHA = [
+      ['A','Apple 🍎'], ['B','Ball ⚽'], ['C','Cat 🐱'], ['D','Dog 🐶'], ['E','Elephant 🐘'],
+      ['F','Fish 🐟'], ['G','Grapes 🍇'], ['H','Hen 🐔'], ['I','Ice-cream 🍦'], ['J','Juice 🧃'],
+      ['K','Kite 🪁'], ['L','Lion 🦁'], ['M','Monkey 🐵'], ['N','Nest 🪹'], ['O','Orange 🍊'],
+      ['P','Parrot 🦜'], ['Q','Queen 👑'], ['R','Rainbow 🌈'], ['S','Sun ☀️'], ['T','Tiger 🐯'],
+      ['U','Umbrella ☂️'], ['V','Violin 🎻'], ['W','Watermelon 🍉'], ['X','Xylophone 🎵'], ['Y','Yo-yo 🪀'], ['Z','Zebra 🦓']
+    ];
+    let alphaIndex = 0, alphaKeysBuilt = false;
+    function alphaMount(){ if(!alphaKeysBuilt){ buildAlphaKeys(); alphaKeysBuilt=true;} updateAlphaUI(); voice.speak('Let\'s learn letters!'); }
+    function buildAlphaKeys(){
+      const wrap = document.getElementById('alphaKeys'); wrap.innerHTML='';
+      ALPHA.forEach((row,i)=>{
+        const b = document.createElement('button'); b.textContent=row[0]; b.onclick=()=>{alphaIndex=i; updateAlphaUI(); alphaSpeak();};
+        wrap.appendChild(b);
+      });
+    }
+    function updateAlphaUI(){
+      const [L,W] = ALPHA[alphaIndex];
+      document.getElementById('alphaLetter').textContent = L;
+      document.getElementById('alphaWord').textContent = W;
+    }
+    function alphaPrev(){ alphaIndex = (alphaIndex-1+ALPHA.length)%ALPHA.length; updateAlphaUI(); alphaSpeak(); }
+    function alphaNext(){ alphaIndex = (alphaIndex+1)%ALPHA.length; updateAlphaUI(); alphaSpeak(); }
+    function alphaSpeak(){ const [L,W] = ALPHA[alphaIndex]; voice.speak(`${L}. ${W.replace(/([A-Za-z-]+).*/, '$1')}.`); awardStar('alpha'); }
+
+    /********************* COUNTING *********************/
+    const COUNT_EMOJIS = ['🍎','🧸','🎈','⭐','🧁','🐠','🚗','🌸','🍪','🔷'];
+    let correctAnswer = 0; let roundsWon = 0;
+    function newCountingRound(){
+      const itemsBox = document.getElementById('countItems');
+      const choices = document.getElementById('countChoices');
+      const feedback = document.getElementById('countFeedback');
+      feedback.textContent='';
+      itemsBox.innerHTML=''; choices.innerHTML='';
+      const n = 1 + Math.floor(Math.random()*10); correctAnswer = n;
+      const icon = COUNT_EMOJIS[Math.floor(Math.random()*COUNT_EMOJIS.length)];
+      for(let i=0;i<n;i++){ const span=document.createElement('span'); span.textContent=icon; itemsBox.appendChild(span); }
+      const opts = new Set([n]); while(opts.size<3){ opts.add(1+Math.floor(Math.random()*10)); }
+      [...opts].sort(()=>Math.random()-.5).forEach(v=>{
+        const b=document.createElement('button'); b.className='btn'; b.textContent=v; b.onclick=()=>checkCount(v);
+        choices.appendChild(b);
+      });
+    }
+    function checkCount(v){
+      const feedback = document.getElementById('countFeedback');
+      if(v===correctAnswer){ feedback.textContent='✅ Correct!'; feedback.className='center success'; voice.speak('Great job!'); roundsWon++; if(roundsWon>=3){ awardStar('count'); } newCountingRound(); }
+      else { feedback.textContent='❌ Try again'; feedback.className='center error'; voice.speak('Try again'); }
+    }
+
+    /********************* COLORS & SHAPES *********************/
+    const PALETTE = ['#FF595E','#FFCA3A','#8AC926','#1982C4','#6A4C93','#FF8A00','#00C2A8','#F72585'];
+    let currentColor = PALETTE[0]; let painted = new Set(); let paintMounted=false;
+    function mountPaint(){ if(paintMounted) return; paintMounted=true; const pal = document.getElementById('palette');
+      PALETTE.forEach(c=>{ const d=document.createElement('button'); d.className='swatch'; d.style.background=c; d.onclick=()=>{currentColor=c; voice.speak('Color picked');}; pal.appendChild(d); });
+      ['shape-circle','shape-square','shape-triangle'].forEach(id=>{
+        document.getElementById(id).addEventListener('click',()=>{ document.getElementById(id).setAttribute('fill', currentColor); painted.add(id); if(painted.size>=3){ awardStar('paint'); toast('Beautiful!'); } });
+      });
+    }
+    function resetPaint(){ painted.clear(); ['shape-circle','shape-square','shape-triangle'].forEach(id=> document.getElementById(id).setAttribute('fill','#ffffff')); }
+
+    /********************* MATCHING (tap-to-match) *********************/
+    let selectedFriend = null; let matchedCount = 0;
+    function selectFriend(el){ if(el.classList.contains('matched')) return; document.querySelectorAll('#match .item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); selectedFriend = el; }
+    function placeTo(target){
+      if(!selectedFriend){ toast('Pick a friend first'); return; }
+      const ok = selectedFriend.getAttribute('data-key') === target.getAttribute('data-key');
+      if(ok){
+        target.classList.add('matched'); target.textContent = selectedFriend.textContent + ' ✅';
+        selectedFriend.classList.add('matched'); selectedFriend.classList.remove('active');
+        matchedCount++; voice.speak('Good match');
+        if(matchedCount>=3){ awardStar('match'); toast('All matched!'); }
+      } else {
+        toast('Oops, try again'); voice.speak('Try again');
+      }
+      selectedFriend = null;
+    }
+    function resetMatch(){ matchedCount=0; selectedFriend=null; document.querySelectorAll('#match .item').forEach(i=>{ i.classList.remove('matched','active'); const k=i.getAttribute('data-key'); if(i.classList.contains('target')){ i.textContent = k.charAt(0).toUpperCase()+k.slice(1); } else { i.textContent = (k==='cat'?'🐱 Cat':k==='dog'?'🐶 Dog':'🐟 Fish'); } }); }
+
+    /********************* TRACING *********************/
+    let traceCanvas, ctx, drawing=false, last=null, lengthDrawn=0, traceIndex=0;
+    const TRACE_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    function mountTrace(){
+      traceCanvas = document.getElementById('traceCanvas'); ctx = traceCanvas.getContext('2d');
+      traceCanvas.addEventListener('pointerdown', startDraw);
+      traceCanvas.addEventListener('pointermove', moveDraw);
+      window.addEventListener('pointerup', endDraw);
+      updateTraceBg();
+      clearTrace();
+    }
+    function updateTraceBg(){ document.getElementById('traceBg').textContent = TRACE_LETTERS[traceIndex]; }
+    function startDraw(e){ drawing=true; last = getPos(e); drawDot(last); }
+    function moveDraw(e){ if(!drawing) return; const p = getPos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.lineWidth=18; ctx.lineCap='round'; ctx.strokeStyle='#000000'; ctx.globalAlpha=.85; ctx.stroke(); lengthDrawn += Math.hypot(p.x-last.x, p.y-last.y); last = p; if(lengthDrawn>1400){ awardStar('trace'); toast('Lovely tracing!'); lengthDrawn = 0; } }
+    function endDraw(){ drawing=false; last=null; }
+    function getPos(e){ const r = traceCanvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * (traceCanvas.width / r.width), y: (e.clientY - r.top) * (traceCanvas.height / r.height) } }
+    function drawDot(p){ ctx.beginPath(); ctx.arc(p.x,p.y,9,0,Math.PI*2); ctx.fillStyle='#000'; ctx.globalAlpha=.85; ctx.fill(); }
+    function clearTrace(){ ctx.clearRect(0,0,traceCanvas.width, traceCanvas.height); lengthDrawn=0; }
+    function prevTrace(){ traceIndex = (traceIndex-1+TRACE_LETTERS.length)%TRACE_LETTERS.length; updateTraceBg(); clearTrace(); voice.speak(TRACE_LETTERS[traceIndex]); }
+    function nextTrace(){ traceIndex = (traceIndex+1)%TRACE_LETTERS.length; updateTraceBg(); clearTrace(); voice.speak(TRACE_LETTERS[traceIndex]); }
+
+    // Accessibility: Enter key to activate cards
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && document.activeElement && document.activeElement.onclick){ document.activeElement.click(); } });
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiki's Learning World</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom, #a2d2ff, #ffafcc);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background: #ff6f91;
+      color: white;
+      padding: 15px;
+      font-size: 24px;
+    }
+    #mascot {
+      width: 150px;
+      margin: 20px auto;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    #lesson-area {
+      background: white;
+      border-radius: 20px;
+      width: 90%;
+      margin: 20px auto;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .option {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 22px;
+      background: #ffd6a5;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .option:hover { transform: scale(1.1); }
+    #reward {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <header>🌟 Kiki's Learning World 🌟</header>
+
+ <img id="mascot" src="https://i.imgur.com/u5H6z2S.png" alt="Kiki Mascot">
+
+
+
+
+  <div id="lesson-area">
+    <h2 id="lesson-title">Welcome!</h2>
+    <p id="lesson-text">Hi, I'm Kiki! Let's learn and play together 🎉</p>
+    <div id="options"></div>
+    <p id="reward"></p>
+  </div>
+
+  <script>
+    // ========== LESSON DATA ==========
+    const LESSONS = [
+      {
+        title: "Alphabet Adventure 🔤",
+        text: "Which one is the letter A?",
+        options: ["A", "B", "C"],
+        answer: "A",
+        reward: "⭐ Alphabet Star"
+      },
+      {
+        title: "Number Quest 🔢",
+        text: "How many apples are there? 🍎🍎🍎",
+        options: ["2", "3", "4"],
+        answer: "3",
+        reward: "🍎 Counting Badge"
+      },
+      {
+        title: "Color Hunt 🎨",
+        text: "Tap the color BLUE 💙",
+        options: ["Red", "Blue", "Green"],
+        answer: "Blue",
+        reward: "🎨 Rainbow Sticker"
+      }
+    ];
+
+    let currentLesson = parseInt(localStorage.getItem("progress")) || 0;
+
+    const lessonTitle = document.getElementById("lesson-title");
+    const lessonText = document.getElementById("lesson-text");
+    const optionsDiv = document.getElementById("options");
+    const rewardDiv = document.getElementById("reward");
+
+    // ========== VOICE ==========
+    function speak(text) {
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = "en-US";
+      speech.pitch = 1.2;
+      speech.rate = 1;
+      window.speechSynthesis.speak(speech);
+    }
+
+    // ========== LOAD LESSON ==========
+    function loadLesson() {
+      if (currentLesson >= LESSONS.length) {
+        lessonTitle.innerText = "🎉 Hooray!";
+        lessonText.innerText = "You've finished all lessons. Come back tomorrow for new ones!";
+        speak("Hooray! You've finished all lessons. Come back tomorrow for new ones!");
+        optionsDiv.innerHTML = "";
+        rewardDiv.innerHTML = "";
+        return;
+      }
+
+      let lesson = LESSONS[currentLesson];
+      lessonTitle.innerText = lesson.title;
+      lessonText.innerText = lesson.text;
+      speak(lesson.text);
+
+      optionsDiv.innerHTML = "";
+      lesson.options.forEach(opt => {
+        let btn = document.createElement("div");
+        btn.className = "option";
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    // ========== CHECK ANSWER ==========
+    function checkAnswer(choice) {
+      let lesson = LESSONS[currentLesson];
+      if (choice === lesson.answer) {
+        rewardDiv.innerText = "You won " + lesson.reward + "!";
+        speak("Great job! You won " + lesson.reward + "!");
+        currentLesson++;
+        localStorage.setItem("progress", currentLesson);
+        setTimeout(loadLesson, 3000);
+      } else {
+        speak("Oops! Try again.");
+      }
+    }
+
+    // ========== INIT ==========
+    loadLesson();
+  </script>
+</body>
+</html>

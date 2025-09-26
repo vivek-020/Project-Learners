@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Learning Hub</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff4d6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.container {
+    width: 95%;
+    max-width: 650px;
+    background-color: #fff8e7;
+    padding: 30px 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+h1 {
+    color: #ff6f00;
+    margin-bottom: 20px;
+    font-size: 26px;
+}
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.nav button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #ffb347;
+    color: #333;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.nav button:hover { background-color: #ff9a9e; }
+.section { display: none; }
+.active { display: block; }
+
+.question, .riddle {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+}
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.option {
+    background-color: #90cdf4;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.option:hover { background-color: #63b3ed; }
+.option.correct { background-color: #38a169; }
+.option.wrong { background-color: #e53e3e; }
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #ffb347;
+    color: #333;
+    font-weight: bold;
+    transition: 0.2s;
+}
+button:hover { background-color: #ff9a9e; }
+.hint {
+    display: none;
+    margin-top: 10px;
+    font-style: italic;
+    color: #8a5700;
+}
+.score, .answer {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>🌟 Fun Learning Hub 🌟</h1>
+
+    <div class="nav">
+        <button onclick="showSection('quizSection')">Quiz</button>
+        <button onclick="showSection('riddleSection')">Riddles</button>
+    </div>
+
+    <!-- QUIZ SECTION -->
+    <div id="quizSection" class="section active">
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+        <div class="hint" id="hint"></div>
+        <div class="controls">
+            <button onclick="prevQuestion()">Previous</button>
+            <button onclick="showHint()">Hint</button>
+            <button onclick="nextQuestion()">Next</button>
+            <button onclick="submitQuiz()">Submit</button>
+        </div>
+        <div class="score" id="score"></div>
+    </div>
+
+    <!-- RIDDLE SECTION -->
+    <div id="riddleSection" class="section">
+        <div class="riddle" id="riddle"></div>
+        <div class="options" id="riddleOptions"></div>
+        <div class="controls">
+            <button onclick="nextRiddle()">Next Riddle</button>
+        </div>
+        <div class="answer" id="riddleAnswer"></div>
+    </div>
+</div>
+
+<script>
+// ---------- HELPER ----------
+function shuffleArray(arr){
+    for(let i=arr.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+}
+
+// ---------- QUIZ ----------
+let questions = [
+    {q:"Which animal is known as King of the Jungle?",options:["Lion","Tiger","Elephant","Bear"],answer:"Lion",hint:"It roars"},
+    {q:"What color is the sky on a clear day?",options:["Blue","Green","Red","Yellow"],answer:"Blue",hint:"Like the ocean"},
+    {q:"Which fruit is yellow?",options:["Banana","Apple","Grapes","Orange"],answer:"Banana",hint:"Monkeys love it"},
+    {q:"How many legs does a spider have?",options:["8","6","10","4"],answer:"8",hint:"More than 6"},
+    {q:"Which is the fastest land animal?",options:["Cheetah","Tiger","Horse","Dog"],answer:"Cheetah",hint:"Spotted sprinter"},
+    {q:"What is 5 + 3?",options:["8","7","9","10"],answer:"8",hint:"More than 7"},
+    {q:"Which planet is called the Red Planet?",options:["Mars","Earth","Jupiter","Venus"],answer:"Mars",hint:"Looks red"},
+    {q:"What do bees make?",options:["Honey","Milk","Bread","Sugar"],answer:"Honey",hint:"Sweet and golden"},
+    {q:"Which shape has 3 sides?",options:["Triangle","Square","Circle","Rectangle"],answer:"Triangle",hint:"Like a slice of pizza"},
+    {q:"Which bird cannot fly?",options:["Penguin","Sparrow","Crow","Parrot"],answer:"Penguin",hint:"Lives in cold"},
+    {q:"What is 10 - 4?",options:["6","7","5","4"],answer:"6",hint:"One less than 7"},
+    {q:"Which animal gives us wool?",options:["Sheep","Cow","Goat","Dog"],answer:"Sheep",hint:"Baa!"},
+    {q:"Which fruit keeps the doctor away?",options:["Apple","Banana","Mango","Pear"],answer:"Apple",hint:"One a day…"},
+    {q:"Which is the largest animal?",options:["Blue Whale","Elephant","Shark","Giraffe"],answer:"Blue Whale",hint:"Lives in water"},
+    {q:"Which sense organ helps us to see?",options:["Eyes","Ears","Nose","Tongue"],answer:"Eyes",hint:"Look!"},
+    {q:"What do cows drink?",options:["Water","Milk","Juice","Tea"],answer:"Water",hint:"Not what they give"},
+    {q:"Which gas do we breathe in?",options:["Oxygen","Carbon dioxide","Nitrogen","Hydrogen"],answer:"Oxygen",hint:"Keeps us alive"},
+    {q:"How many days are in a week?",options:["7","5","6","8"],answer:"7",hint:"Starts with Monday"},
+    {q:"Which insect makes a web?",options:["Spider","Ant","Bee","Fly"],answer:"Spider",hint:"Sticky trap"},
+    {q:"Which star gives us light?",options:["Sun","Moon","Venus","Mars"],answer:"Sun",hint:"Daylight source"}
+];
+
+shuffleArray(questions);
+let current = 0;
+let score = 0;
+
+function showQuestion(){
+    const q = questions[current];
+    document.getElementById("question").innerText = (current+1)+". "+q.q;
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+    shuffleArray(q.options);
+    q.options.forEach((opt)=>{
+        const btn = document.createElement("button");
+        btn.classList.add("option");
+        btn.innerText = opt;
+        btn.onclick = ()=>checkAnswer(opt,btn);
+        optionsDiv.appendChild(btn);
+    });
+    document.getElementById("hint").style.display="none";
+}
+
+function checkAnswer(selected,btn){
+    const correct = questions[current].answer;
+    if(selected===correct){btn.classList.add("correct"); score++;}
+    else{btn.classList.add("wrong");}
+    document.querySelectorAll(".option").forEach(b=>b.onclick=null);
+}
+
+function prevQuestion(){if(current>0){current--;showQuestion();}}
+function nextQuestion(){if(current<questions.length-1){current++;showQuestion();}}
+function showHint(){
+    document.getElementById("hint").style.display="block";
+    document.getElementById("hint").innerText="Hint: "+questions[current].hint;
+}
+function submitQuiz(){
+    document.getElementById("score").innerText=`Your score: ${score}/${questions.length}`;
+}
+
+showQuestion();
+
+// ---------- RIDDLES ----------
+let riddles = [
+    {q:"I’m tall when I’m young, and I’m short when I’m old. What am I?",options:["Candle","Tree","Pencil","Shadow"],answer:"Candle"},
+    {q:"What has to be broken before you can use it?",options:["Egg","Glass","Nut","Key"],answer:"Egg"},
+    {q:"I’m light as a feather, yet the strongest person can’t hold me for long. What am I?",options:["Breath","Air","Balloon","Leaf"],answer:"Breath"},
+    {q:"What has many keys but can’t open a lock?",options:["Piano","Keyboard","Map","Box"],answer:"Piano"},
+    {q:"The more you take, the more you leave behind. What am I?",options:["Footsteps","Time","Sand","Memories"],answer:"Footsteps"},
+    {q:"What has hands but can’t clap?",options:["Clock","Robot","Monkey","Gloves"],answer:"Clock"},
+    {q:"What has a face and two hands but no arms or legs?",options:["Clock","Pillow","Robot","Tree"],answer:"Clock"},
+    {q:"What gets wetter the more it dries?",options:["Towel","Sponge","Rain","Soap"],answer:"Towel"},
+    {q:"I go up and down but never move. What am I?",options:["Stairs","Kite","Elevator","Ball"],answer:"Stairs"},
+    {q:"What has many teeth but cannot bite?",options:["Comb","Shark","Zipper","Leaf"],answer:"Comb"},
+    {q:"You can catch me but can’t throw me. What am I?",options:["A cold","Ball","Butterfly","Fish"],answer:"A cold"},
+    {q:"Where does Friday come before Thursday?",options:["Dictionary","School","Calendar","Park"],answer:"Dictionary"},
+    {q:"What has a neck but no head?",options:["Bottle","Snake","Shirt","Road"],answer:"Bottle"},
+    {q:"Which letter has most water?",options:["C","A","B","D"],answer:"C"},
+    {q:"What can travel around the world while staying in a corner?",options:["Stamp","Bird","Plane","Shadow"],answer:"Stamp"},
+    {q:"The more you take away, the bigger I get. What am I?",options:["Hole","Balloon","Fire","Shadow"],answer:"Hole"},
+    {q:"I have branches, but no fruit, trunk or leaves. What am I?",options:["Bank","Tree","River","Road"],answer:"Bank"},
+    {q:"What has an eye but cannot see?",options:["Needle","Storm","Potato","Camera"],answer:"Needle"},
+    {q:"What begins with T, ends with T and has T inside?",options:["Teapot","Tent","Toilet","Tablet"],answer:"Teapot"},
+    {q:"I fly without wings. I cry without eyes. What am I?",options:["Cloud","Rain","Wind","Balloon"],answer:"Cloud"}
+];
+
+shuffleArray(riddles);
+let rCurrent = 0;
+
+function showRiddle(){
+    const r = riddles[rCurrent];
+    document.getElementById("riddle").innerText = "Riddle "+(rCurrent+1)+": "+r.q;
+    const rOptions = document.getElementById("riddleOptions");
+    rOptions.innerHTML = "";
+    shuffleArray(r.options);
+    r.options.forEach(opt=>{
+        const btn = document.createElement("button");
+        btn.classList.add("option");
+        btn.innerText = opt;
+        btn.onclick = ()=>checkRiddle(opt,btn);
+        rOptions.appendChild(btn);
+    });
+    document.getElementById("riddleAnswer").innerText = "";
+}
+
+function checkRiddle(selected,btn){
+    const correct = riddles[rCurrent].answer;
+    if(selected===correct){
+        btn.classList.add("correct");
+        document.getElementById("riddleAnswer").innerText = "✅ Correct!";
+    } else {
+        btn.classList.add("wrong");
+        document.getElementById("riddleAnswer").innerText = "❌ Wrong! Answer: "+correct;
+    }
+    document.querySelectorAll("#riddleOptions .option").forEach(b=>b.onclick=null);
+}
+
+function nextRiddle(){
+    if(rCurrent<riddles.length-1){rCurrent++;} else {rCurrent=0;}
+    showRiddle();
+}
+showRiddle();
+
+// ---------- NAVIGATION ----------
+function showSection(id){
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+</script>
+</body>
+</html>

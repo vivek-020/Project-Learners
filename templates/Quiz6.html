@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Learning Quiz</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff4d6; /* light cream */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.quiz-container {
+    width: 90%;
+    max-width: 500px;
+    background-color: #fff8e7;
+    padding: 30px 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+h1 {
+    color: #ff6f00;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+.question {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+}
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.option {
+    background-color: #90cdf4; /* blue buttons */
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.option:hover {
+    background-color: #63b3ed;
+}
+.option.correct {
+    background-color: #38a169; /* green for correct */
+}
+.option.wrong {
+    background-color: #e53e3e; /* red for wrong */
+}
+.controls {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #ffb347;
+    color: #333;
+    font-weight: bold;
+    transition: 0.2s;
+}
+button:hover {
+    background-color: #ff9a9e;
+}
+.hint {
+    display: none;
+    margin-top: 10px;
+    font-style: italic;
+    color: #8a5700;
+}
+.score {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+}
+</style>
+</head>
+<body>
+<div class="quiz-container">
+    <h1>🌟 Fun Learning Quiz 🌟</h1>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="hint" id="hint"></div>
+    <div class="controls">
+        <button onclick="prevQuestion()">Previous</button>
+        <button onclick="showHint()">Hint</button>
+        <button onclick="nextQuestion()">Next</button>
+        <button onclick="submitQuiz()">Submit</button>
+    </div>
+    <div class="score" id="score"></div>
+</div>
+
+<script>
+let questions = [
+    {q:"Which animal is known as King of the Jungle?",options:["Lion","Elephant","Horse"],answer:0,hint:"It roars"},
+    {q:"What color is the sky?",options:["Blue","Green","Red"],answer:0,hint:"Like the ocean"},
+    {q:"Which fruit is yellow?",options:["Banana","Apple","Grapes"],answer:0,hint:"Monkeys love it"},
+    {q:"How many legs does a spider have?",options:["8","6","4"],answer:0,hint:"More than 6"},
+    {q:"What planet do we live on?",options:["Earth","Mars","Venus"],answer:0,hint:"The blue planet"},
+    {q:"Which is the fastest land animal?",options:["Cheetah","Tiger","Horse"],answer:0,hint:"Spots and speed"},
+    {q:"How many days are there in a leap year?",options:["366","365","364"],answer:0,hint:"One extra day"},
+    {q:"What is the color of grass?",options:["Green","Yellow","Blue"],answer:0,hint:"Same as leaves"},
+    {q:"Which shape has three sides?",options:["Triangle","Square","Circle"],answer:0,hint:"Three corners"},
+    {q:"Which bird is a symbol of peace?",options:["Dove","Crow","Owl"],answer:0,hint:"White and gentle"},
+    {q:"What is H2O commonly known as?",options:["Water","Oxygen","Salt"],answer:0,hint:"You drink it"},
+    {q:"Which planet is called the Red Planet?",options:["Mars","Jupiter","Mercury"],answer:0,hint:"Named after a Roman god of war"},
+    {q:"Which animal gives us wool?",options:["Sheep","Cow","Dog"],answer:0,hint:"Baa baa"},
+    {q:"Which festival is called the festival of lights?",options:["Diwali","Holi","Christmas"],answer:0,hint:"Lots of lamps"},
+    {q:"Which gas do humans need to breathe?",options:["Oxygen","Carbon dioxide","Nitrogen"],answer:0,hint:"Essential for life"},
+    {q:"How many hours are there in a day?",options:["24","12","36"],answer:0,hint:"Two dozen"},
+    {q:"What is the largest mammal?",options:["Blue Whale","Elephant","Giraffe"],answer:0,hint:"Lives in the ocean"},
+    {q:"What do bees make?",options:["Honey","Milk","Sugar"],answer:0,hint:"Sweet and sticky"},
+    {q:"Which part of the plant is green and makes food?",options:["Leaf","Root","Flower"],answer:0,hint:"Photosynthesis happens here"},
+    {q:"Which planet is closest to the Sun?",options:["Mercury","Venus","Earth"],answer:0,hint:"Smallest planet too"},
+];
+
+function shuffleArray(arr){
+    for(let i=arr.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+}
+shuffleArray(questions);
+
+let current = 0;
+let score = 0;
+
+function showQuestion(){
+    const q = questions[current];
+    document.getElementById("question").innerText = (current+1)+". "+q.q;
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+    q.options.forEach((opt)=>{
+        const btn = document.createElement("button");
+        btn.classList.add("option");
+        btn.innerText = opt;
+        btn.onclick = ()=>checkAnswer(opt,btn,q.answer);
+        optionsDiv.appendChild(btn);
+    });
+    document.getElementById("hint").style.display="none";
+}
+
+function checkAnswer(selected,btn,answerIndex){
+    const correct = questions[current].options[answerIndex];
+    if(selected===correct){
+        btn.classList.add("correct");
+        score++;
+    } else {
+        btn.classList.add("wrong");
+    }
+    document.querySelectorAll(".option").forEach(b=>b.onclick=null);
+}
+
+function prevQuestion(){
+    if(current>0){current--;showQuestion();}
+}
+function nextQuestion(){
+    if(current<questions.length-1){current++;showQuestion();}
+}
+function showHint(){
+    document.getElementById("hint").style.display="block";
+    document.getElementById("hint").innerText="Hint: "+questions[current].hint;
+}
+function submitQuiz(){
+    document.getElementById("score").innerText=`Your score: ${score}/${questions.length}`;
+}
+
+showQuestion();
+</script>
+</body>
+</html>

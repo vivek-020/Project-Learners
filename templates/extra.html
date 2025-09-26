@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Colors & Shapes - Kids Learning</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(to bottom, #fff, #d1f4ff);
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+
+    }
+    .mascot {
+      width: 140px;
+      margin: 10px auto;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .shapes {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    svg {
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+      stroke: black;
+      stroke-width: 2;
+      fill: white;
+      transition: fill 0.3s ease;
+    }
+    .palette {
+      margin: 20px;
+    }
+    .color-btn {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      margin: 5px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #333;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1000;
+    }
+    .confetti div {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      animation: fall 3s linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(100vh) rotate(360deg); }
+    }
+---
+  <style>
+    :root{
+      --bg: #FFF7E9;
+      --card: #FFFFFF;
+      --primary: #FF8A00;
+      --primary-2: #FFB703;
+      --accent: #5E60CE;
+      --text: #2B2D42;
+      --good: #2ecc71;
+      --bad: #e74c3c;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;}
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 500px at 10% -10%, #FFF3C4 0%, #FFF7E9 40%, #FFF7E9 100%);
+      color: var(--text);
+      -webkit-tap-highlight-color: transparent;
+    }
+    header{
+      position: sticky; top:0; z-index:10;      
+      background:rgb(111, 154, 247);
+
+      color:#fff; padding: 14px 16px; display:flex; align-items:center; gap:12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12);
+    }
+    .brand{font-weight:800; letter-spacing:.3px; font-size: clamp(18px, 3.2vw, 28px)}
+    .spacer{flex:1}
+    .pill{background: rgba(200,200,200,.2); border:2px solid rgba(255,255,255,.35); padding:8px 12px; border-radius:999px; display:flex; align-items:center; gap:8px; font-weight:700}
+    .btn{cursor:pointer; border:none; border-radius:16px; padding:12px 16px; font-weight:700; font-size:18px; background: var(--accent); color:#fff; box-shadow:0 6px 14px rgba(0,0,0,.12)}
+    .btn.secondary{ background:#fff; color: var(--accent); border:2px solid var(--accent)}
+    .btn.ghost{ background: transparent; color:#fff; border:2px solid rgba(100,100,100,.5)}
+    
+    .wrap{max-width:1100px; margin: 0 auto; padding: 18px 16px 60px}
+
+    /* Home grid */
+    .grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:16px}
+    .card{background:var(--card); border-radius:24px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,.08); transition: transform .15s ease, box-shadow .15s ease; display:flex; flex-direction:column; justify-content:space-between; min-height:170px}
+    .card:hover{transform: translateY(-2px); box-shadow:0 12px 30px rgba(0,0,0,.12)}
+    .card {margin:6px 0 8px; font-size:20px}
+    .card p{margin:0; opacity:.8}
+    .big-emoji{font-size:44px}
+
+    .screens{position:relative}
+    .screen{display:none; animation: fade .2s ease}
+    .screen.active{display:block}
+    @keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+    .toolbar{display:flex; gap:8px; align-items:center; margin: 10px 0 18px}
+    .toolbar .back{background:#fff; border:2px solid #eee; color:#333}
+
+    .panel{background:#fff; border-radius:24px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08)}
+
+    /* ALPHABET */
+    .alpha-main{display:grid; grid-template-columns: 1.1fr .9fr; gap:16px}
+    .alpha-letter{font-size: clamp(90px, 16vw, 160px); font-weight: 900; line-height: .9; text-align:center; background: linear-gradient(180deg,#222,#666); -webkit-background-clip:text; -webkit-text-fill-color: transparent}
+    .alpha-word{font-size: clamp(22px, 3vw, 30px); text-align:center}
+    .alpha-keys{display:grid; grid-template-columns: repeat(13,1fr); gap:6px}
+    .alpha-keys button{padding:10px; border-radius:12px; border:2px solid #eee; background:#fafafa; font-weight:900; font-size:18px}
+
+    /* COUNTING */
+    .count-items{font-size:40px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:8px}
+    .choices{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+    .choices button{font-size:20px}
+
+    /* COLOR & SHAPE */
+    .palette{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:8px 0 14px}
+    .swatch{width:40px; height:40px; border-radius:12px; border:2px solid rgba(0,0,0,.08); cursor:pointer}
+    .shapes{display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:16px; place-items:center}
+    svg.shape{width:160px; height:160px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.1))}
+<button>dd<button/>
+    /* MATCH GAME (tap-to-match for touch support) */
+    .match-wrap{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+    .list{background:#fff; border-radius:24px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    .item{display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; border:2px dashed #eee; border-radius:16px; margin:8px 0; font-size:28px; cursor:pointer}
+    .target{opacity:.7}
+    .matched{background:#E9FCEB; border:2px solid #b6f3bf}
+
+    /* TRACING */
+    .trace-wrap{display:grid; grid-template-columns: 1fr; gap:12px}
+    .trace-board{position:relative; border-radius:24px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    .trace-bg{position:absolute; inset:0; display:grid; place-items:center; font-weight:900; font-size: clamp(180px, 30vw, 280px); color: rgba(0,0,0,.06); user-select:none}
+    canvas{display:block; width:100%; height:400px; background:#fff; touch-action:none}
+
+    /* FEEDBACK */
+    .toast{position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 14px; border-radius:999px; font-weight:700; opacity:0; pointer-events:none; transition:.2s}
+    .toast.show{opacity:1}
+
+    /* CONFETTI */
+    .confetti{position:fixed; top:-20px; font-size:24px; animation: fall linear forwards;}
+    @keyframes fall{to{transform: translateY(110vh) rotate(260deg); opacity:.9}}
+
+    /* Utilities */
+    .center{text-align:center}
+    .muted{opacity:.7}
+    .success{color:var(--good)}
+    .error{color:var(--bad)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand" background="brown">🧸 Kids Learning • Age 4</div>
+    <div class="spacer"></div>
+    <div class="pill" id="starPill" aria-live="polite">⭐ <span id="stars">0</span> Stickers</div>
+  </header>
+
+--
+  </style>
+</head>
+<body>
+  <title>Interactive Rhymes for Kids</title>
+  <style>
+    :root{
+      --bg:#f9fafb; --ink:#111827; --ink-light:#6b7280; --brand:#4f46e5; --brand-2:#22c55e; --card:#ffffff; --muted:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg,#eef2ff, #fef2f2 60%, #f9fafb);
+      color:var(--ink);
+    }
+    .app{display:grid; grid-template-columns: 300px 1fr; gap:16px; padding:20px; max-width:1100px; margin:0 auto}
+    .card{background:var(--card); border:1px solid var(--muted); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.05)}
+    .sidebar{padding:16px}
+    .sidebar h2{margin:6px 0 12px; font-size:1.1rem}
+    .rhyme-list{display:flex; flex-direction:column; gap:10px}
+    .rhyme-btn{display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:14px; border:1px solid var(--muted); background:#fff; cursor:pointer; transition:.2s; font-weight:600}
+    .rhyme-btn:hover{transform:translateY(-2px); box-shadow:0 8px 18px rgba(0,0,0,.08)}
+    .rhyme-btn.active{outline:3px solid rgba(79,70,229,.25); border-color:var(--brand)}.main{padding:20px}
+.title{font-size:clamp(1.2rem, 2.2vw, 2rem); margin:0 0 6px}
+.subtitle{color:var(--ink-light); margin:0 0 16px}
+
+.controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:12px 0 18px}
+.btn{border:0; padding:10px 14px; border-radius:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px}
+.btn svg{width:18px; height:18px}
+.btn.primary{background:var(--brand); color:#fff}
+.btn.secondary{background:#fff; border:1px solid var(--muted)}
+.btn.success{background:var(--brand-2); color:#063}
+.btn.danger{background:#fee2e2; color:#991b1b}
+.btn:disabled{opacity:.5; cursor:not-allowed}
+
+.voicebar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px; background:#fff; border:1px dashed var(--muted); border-radius:14px}
+select, input[type="range"]{padding:8px; border-radius:10px; border:1px solid var(--muted); background:#fff}
+label{font-size:.9rem; color:var(--ink-light)}
+
+.lyrics{padding:18px; line-height:2.2; font-size:clamp(1rem, 2.1vw, 1.35rem); border-radius:16px; background:#fff; border:1px solid var(--muted); min-height:240px}
+.word{padding:2px 6px; border-radius:10px; transition:.15s; cursor:pointer}
+.word:hover{background:#f3f4f6}
+.word.active{background: #fde68a; box-shadow:0 0 0 3px #fef3c7 inset}
+.linebreak{display:block; height:10px}
+
+.footer{margin-top:16px; color:var(--ink-light); font-size:.9rem}
+.badge{display:inline-block; padding:4px 8px; border-radius:999px; background:#eef2ff; color:#3730a3; font-weight:700; font-size:.75rem}
+
+@media (max-width: 860px){
+  .app{grid-template-columns: 1fr;}
+}
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar card" aria-label="Rhyme Picker">
+      <h2>🎵 Pick a Rhyme</h2>
+      <div class="rhyme-list" id="rhymeList"></div>
+      <p class="footer">Tip: Tap any word to hear it alone 👂</p>
+    </aside>
+    <main class="main card" aria-live="polite">
+      <h1 class="title" id="title">Interactive Rhymes</h1>
+      <p class="subtitle" id="desc">Press ▶️ Play to start karaoke-style reading with voice.</p><div class="controls">
+    <button class="btn primary" id="playBtn" title="Play / Resume">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Play
+    </button>
+    <button class="btn secondary" id="pauseBtn" title="Pause">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      Pause
+    </button>
+    <button class="btn danger" id="stopBtn" title="Stop">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+      Stop
+    </button>
+    <span class="badge" id="status">Ready</span>
+  </div>
+
+  <div class="voicebar">
+    <label for="voiceSel">Voice</label>
+    <select id="voiceSel" aria-label="Choose a voice"></select>
+
+    <label for="rate">Speed: <span id="rateVal">1.0</span>x</label>
+    <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1.0" />
+
+    <label for="pitch">Pitch: <span id="pitchVal">1.0</span></label>
+    <input type="range" id="pitch" min="0.7" max="1.3" step="0.1" value="1.0" />
+  </div>
+
+  <div class="lyrics" id="lyrics" tabindex="0" aria-label="Rhyme lyrics will appear here"></div>
+
+  <p class="footer">Works best in modern browsers with the Web Speech API (Chrome, Edge, Safari). Some devices may have limited voice choices.</p>
+</main>
+
+  </div>  <script>
+    // --- Rhymes data ---
+    const RHYMES = [
+      {
+        id: 'twinkle',
+        title: 'Twinkle, Twinkle, Little Star',
+        desc: 'A classic starry-night rhyme.',
+        text: `Twinkle, twinkle, little star,\nHow I wonder what you are!\nUp above the world so high,\nLike a diamond in the sky.\nTwinkle, twinkle, little star,\nHow I wonder what you are!`
+      },
+      {
+        id: 'baa',
+        title: 'Baa, Baa, Black Sheep',
+        desc: 'Counting and sharing.',
+        text: `Baa, baa, black sheep, have you any wool?\nYes sir, yes sir, three bags full;\nOne for the master, and one for the dame,\nAnd one for the little boy who lives down the lane.`
+      },
+      {
+        id: 'humpty',
+        title: 'Humpty Dumpty',
+        desc: 'Balance and caution tale.',
+        text: `Humpty Dumpty sat on a wall,\nHumpty Dumpty had a great fall;\nAll the king's horses and all the king's men\nCouldn't put Humpty together again.`
+      }
+    ];
+
+    // --- State ---
+    let selected = RHYMES[0];
+    let voices = [];
+    let isPlaying = false;
+    let isPaused = false;
+    let idx = 0;              // current token index
+    let tokens = [];          // tokens including words and linebreak markers
+
+    const statusBadge = document.getElementById('status');
+    const lyricsEl = document.getElementById('lyrics');
+
+    // --- Helpers ---
+    function tokenize(text){
+      // Insert explicit \n tokens and keep punctuation attached to words
+      const parts = text.replace(/\n/g, ' \n ').split(/\s+/).filter(Boolean);
+      return parts;
+    }
+
+    function renderLyrics(){
+      lyricsEl.innerHTML = '';
+      tokens = tokenize(selected.text);
+      const frag = document.createDocumentFragment();
+      let wordIndex = 0;
+      tokens.forEach(tok => {
+        if(tok === '\\n'){
+          const br = document.createElement('span');
+          br.className = 'linebreak';
+          frag.appendChild(br);
+        }else{
+          const span = document.createElement('span');
+          span.className = 'word';
+          span.textContent = tok.replace(/_/g,'');
+          span.dataset.wordIndex = wordIndex;
+          span.addEventListener('click', ()=> speakSingleWord(tok));
+          frag.appendChild(span);
+          frag.appendChild(document.createTextNode(' '));
+          wordIndex++;
+        }
+      });
+      lyricsEl.appendChild(frag);
+      idx = 0;
+      updateActiveWord(-1);
+    }
+
+    function updateActiveWord(activeWordIdx){
+      document.querySelectorAll('.word').forEach((el,i)=>{
+        if(i===activeWordIdx){ el.classList.add('active');
+          el.scrollIntoView({block:'nearest', inline:'nearest'});
+        } else { el.classList.remove('active'); }
+      });
+    }
+
+    function setStatus(text){ statusBadge.textContent = text; }
+
+    // --- Speech ---
+    function getSelectedVoice(){
+      const sel = document.getElementById('voiceSel');
+      const name = sel.value;
+      return voices.find(v=>v.name===name) || null;
+    }
+
+    function speakTokenAt(i){
+      if(i >= tokens.length){ finish(); return; }
+      if(tokens[i] === '\\n'){ // small pause on line break
+        updateActiveWord(idxWordFromToken(i)-1);
+        setTimeout(()=>{ speakTokenAt(i+1); }, 220);
+        return;
+      }
+      const utter = new SpeechSynthesisUtterance(tokens[i]);
+      utter.voice  = getSelectedVoice();
+      const rate   = parseFloat(document.getElementById('rate').value);
+      const pitch  = parseFloat(document.getElementById('pitch').value);
+      utter.rate = rate; utter.pitch = pitch;
+      utter.onstart = ()=>{
+        const wIdx = idxWordFromToken(i);
+        updateActiveWord(wIdx);
+      };
+      utter.onend = ()=>{
+        if(isPlaying && !isPaused){
+          idx = i+1;
+          speakTokenAt(idx);
+        }
+      };
+      speechSynthesis.speak(utter);
+    }
+
+    function idxWordFromToken(tIdx){
+      // count non-\n tokens up to tIdx
+      let count = 0;
+      for(let k=0;k<=tIdx;k++) if(tokens[k] !== '\\n') count++;
+      return count-1; // zero-based index of current word
+    }
+
+    function speakSingleWord(tok){
+      cancelSpeech();
+      const utter = new SpeechSynthesisUtterance(tok);
+      utter.voice  = getSelectedVoice();
+      utter.rate   = parseFloat(document.getElementById('rate').value);
+      utter.pitch  = parseFloat(document.getElementById('pitch').value);
+      utter.onstart = ()=> setStatus('Speaking word');
+      utter.onend = ()=> { setStatus('Ready'); updateActiveWord(-1); };
+      speechSynthesis.speak(utter);
+    }
+
+    function play(){
+      if(isPaused){
+        isPaused = false; isPlaying = true; speechSynthesis.resume(); setStatus('Playing'); return;
+      }
+      if(isPlaying){ return; }
+      isPlaying = true; isPaused = false; setStatus('Playing');
+      speakTokenAt(idx);
+    }
+
+    function pause(){
+      if(!isPlaying) return;
+      isPaused = true; speechSynthesis.pause(); setStatus('Paused');
+    }
+
+    function cancelSpeech(){
+      speechSynthesis.cancel();
+    }
+
+    function stop(){
+      if(!isPlaying && !isPaused) return;
+      cancelSpeech();
+      isPlaying = false; isPaused = false; idx = 0; setStatus('Stopped');
+      updateActiveWord(-1);
+    }
+
+    function finish(){
+      isPlaying = false; isPaused = false; idx = 0; setStatus('Finished');
+      updateActiveWord(-1);
+    }
+
+    // --- Voice UI ---
+    function populateVoices(){
+      voices = window.speechSynthesis.getVoices();
+      const sel = document.getElementById('voiceSel');
+      sel.innerHTML = '';
+      voices.forEach(v=>{
+        const opt = document.createElement('option');
+        opt.value = v.name; opt.textContent = `${v.name} ${v.lang? '('+v.lang+')':''}`;
+        sel.appendChild(opt);
+      });
+      // Try a child-friendly default: look for an English voice
+      const prefer = voices.find(v=>/en-?GB|en-?US/i.test(v.lang||'')) || voices[0];
+      if(prefer) sel.value = prefer.name;
+    }
+
+    speechSynthesis.onvoiceschanged = populateVoices;
+
+    // --- Rhyme Picker UI ---
+    function buildRhymeList(){
+      const list = document.getElementById('rhymeList');
+      list.innerHTML = '';
+      RHYMES.forEach(r=>{
+        const btn = document.createElement('button');
+        btn.className = 'rhyme-btn' + (r.id===selected.id? ' active':'' );
+        btn.innerHTML = `🎶 <span>${r.title}</span>`;
+        btn.addEventListener('click', ()=>{
+          stop();
+          selected = r; document.getElementById('title').textContent = r.title; document.getElementById('desc').textContent = r.desc;
+          document.querySelectorAll('.rhyme-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          renderLyrics();
+          setStatus('Ready');
+        });
+        list.appendChild(btn);
+      });
+    }
+
+    // --- Controls wiring ---
+    document.getElementById('playBtn').addEventListener('click', play);
+    document.getElementById('pauseBtn').addEventListener('click', pause);
+    document.getElementById('stopBtn').addEventListener('click', stop);
+
+    document.getElementById('rate').addEventListener('input', (e)=>{
+      document.getElementById('rateVal').textContent = e.target.value;
+    });
+    document.getElementById('pitch').addEventListener('input', (e)=>{
+      document.getElementById('pitchVal').textContent = e.target.value;
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e)=>{
+      if(e.code==='Space'){ e.preventDefault(); if(isPlaying && !isPaused) pause(); else play(); }
+      if(e.key==='Escape'){ stop(); }
+    });
+      
+
+    
+    // Init
+    buildRhymeList();
+    renderLyrics();
+    populateVoices();
+  </script></body>
+</html>

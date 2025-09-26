@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<button class="btn home" onclick="window.location.href='/7years'">
+  🏠 Home
+</button>
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids Learning Quiz</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, sans-serif;
+      background: #fff8dc;
+      text-align: center;
+      padding: 20px;
+    }
+    .home {
+    background: #9c27b0; /* purple */
+    margin-top: 60px;
+  }
+  .home:hover {
+    background: #7b1fa2;
+    transform: scale(1.4);
+  }
+    h1 {
+      color: #ff4500;
+      font-size: 28px;
+    }
+    .question {
+      margin: 20px 0;
+      font-size: 20px;
+      color: #333;
+    }
+    .question img {
+      max-width: 180px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 12px;
+    }
+    .options button {
+      display: block;
+      width: 80%;
+      margin: 8px auto;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      background: #87ceeb;
+      color: white;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #4682b4;
+    }
+    #feedback {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    #result {
+      font-size: 22px;
+      margin-top: 20px;
+      color: green;
+    }
+    #playAgain {
+      display: none;
+      padding: 12px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      background: #32cd32;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    
+  </style>
+</head>
+
+<body>
+  
+  <h1>🌟 Fun Learning Quiz 🌟</h1>
+  <div id="quiz"></div>
+  <div id="feedback"></div>
+  <div id="result"></div>
+  <button id="playAgain" onclick="restartQuiz()">🔄 Play Again</button>
+
+  <script>
+    const questions = [
+      {
+        q: "What is 3 + 2?",
+        options: ["4", "5", "6"],
+        answer: "5"
+      },
+      {
+        q: "Which animal is this?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg",
+        options: ["Dog", "Cat", "Tiger"],
+        answer: "Cat"
+      },
+      {
+        q: "What color is a banana?",
+        options: ["Red", "Yellow", "Blue"],
+        answer: "Yellow"
+      },
+      {
+        q: "Which fruit is this?",img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg",
+        options: ["Potato", "Tomato", "Apple"],
+        answer: "Tomato"
+      },
+      {
+        q: "How many days are in a week?",
+        options: ["5", "7", "10"],
+        answer: "7"
+      },
+      {
+        q: "Which shape is round?",
+        options: ["Square", "Circle", "Triangle"],
+        answer: "Circle"
+      },
+      {
+        q: "Which bird is this?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/3/32/House_sparrow04.jpg",
+        options: ["Parrot", "Sparrow", "Peacock"],
+        answer: "Sparrow"
+      },
+      {
+        q: "What is 10 - 6?",
+        options: ["2", "3", "4"],
+        answer: "4"
+      },
+      {
+        q: "Which planet do we live on?",
+        options: ["Mars", "Earth", "Jupiter"],
+        answer: "Earth"
+      },
+      {
+        q: "Which animal is known as King of the Jungle?",
+        options: ["Lion", "Elephant", "Horse"],
+        answer: "Lion"
+      }
+    ];
+
+    let shuffled = [];
+    let current = 0;
+    let score = 0;
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function startQuiz() {
+      shuffled = shuffle([...questions]).slice(0, 10);
+      current = 0;
+      score = 0;
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("playAgain").style.display = "none";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (current >= shuffled.length) {
+        document.getElementById("quiz").innerHTML = "";
+        document.getElementById("feedback").innerHTML = "";
+        document.getElementById("result").innerHTML =
+          `🎉 Great job! You scored ${score} out of ${shuffled.length}.`;
+        document.getElementById("playAgain").style.display = "inline-block";
+        return;
+      }
+
+      let q = shuffled[current];
+      let html = `<div class="question"><p>${current + 1}. ${q.q}</p>`;
+      if (q.img) {
+        html += `<img src="${q.img}" alt="question image">`;
+      }
+      html += `<div class="options">`;
+      q.options.forEach(opt => {
+        html += `<button onclick="checkAnswer('${opt}')">${opt}</button>`;
+      });
+      html += `</div></div>`;
+      document.getElementById("quiz").innerHTML = html;
+      document.getElementById("feedback").innerHTML = "";
+    }
+
+    function checkAnswer(ans) {
+      let correct = shuffled[current].answer;
+      if (ans === correct) {
+        score++;
+        document.getElementById("feedback").style.color = "green";
+        document.getElementById("feedback").innerHTML = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").style.color = "red";
+        document.getElementById("feedback").innerHTML =
+          `❌ Oops! The correct answer is: ${correct}`;
+      }
+      current++;
+      setTimeout(showQuestion, 1200);
+    }
+
+    function restartQuiz() {
+      startQuiz();
+    }
+
+    startQuiz();
+  </script>
+</body>
+</html>

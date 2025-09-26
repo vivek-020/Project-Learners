@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kids Learning Zone - Avatar</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: rgb(131, 193, 247);
+      color: #333;
+      overflow-x: hidden;
+    }
+    header {
+      background: #2a0dd2;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    header h1 { margin: 0; font-size: 24px; }
+    nav ul { list-style: none; padding: 0; margin: 10px 0 0; display: flex; justify-content: center; gap: 20px; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    main { padding: 20px; text-align: center; }
+    .profile-section { margin: 20px 0; text-align: center; }
+    #profilePhoto { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #333; }
+    #profileName { font-weight: bold; margin-top: 8px; }
+    .age-buttons { margin-top: 15px; }
+    .age-buttons button {
+      background: #b55c40; border: none; color: white; padding: 10px 15px; margin: 5px; border-radius: 8px;
+      font-size: 16px; cursor: pointer; transition: transform 0.2s;
+    }
+    .age-buttons button:hover { background: #f50057; transform: scale(1.1); }
+    #selectedAge { margin-top: 10px; font-size: 18px; font-weight: bold; color: #222; }
+    .cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px; }
+    .card { width: 150px; padding: 12px; background: #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+    .card:hover { transform: scale(1.05); background: #fdf2f8; }
+    .card img { width: 100%; height: 120px; object-fit: contain; }
+    .card h3 { margin-top: 8px; font-size: 16px; color: #111; }
+    .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.25); text-align: center; display: none; z-index: 1000; animation: fadeIn 0.3s ease; }
+    .popup h3 { margin-bottom: 16px; font-size: 20px; color: #333; }
+    .emoji { display: inline-block; animation: bounce 1s infinite; font-size: 28px; }
+    .popup button { margin: 0 8px; padding: 8px 16px; border-radius: 6px; }
+    .btn-yes { background: #3b82f6; color: white; }
+    .btn-no { background: #2a0dd2; color: #333; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+    .confetti { position: fixed; top: -10px; width: 10px; height: 10px; background: red; opacity: 0.7; border-radius: 50%; animation: fall linear forwards; z-index: 9999; }
+    @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+    footer { text-align: center; padding: 15px; background: #2a0dd2; color: white; margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 Kids Learning Zone</h1>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="hi.html">🏠 Home</a></li>
+        <li><a href="#">👨 Profile</a></li>
+        <li><a href="#">📊 Dashboard</a></li>
+        <li><a href="#">ℹ️ About Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="profile-section">
+    <h2>Your Profile</h2>
+    <img id="profilePhoto" src="https://cdn-icons-png.flaticon.com/512/1674/1674291.png" alt="Default Avatar">
+    <p id="profileName">Batman</p>
+
+    <div class="age-buttons">
+      <p><strong>Select Your Age:</strong></p>
+      <button onclick="setAge(3)">3</button>
+      <button onclick="setAge(4)">4</button>
+      <button onclick="setAge(5)">5</button>
+      <button onclick="setAge(6)">6</button>
+      <button onclick="setAge(7)">7</button>
+      <button onclick="setAge(8)">8</button>
+    </div>
+    <p id="selectedAge">Age: Not selected</p>
+  </section>
+
+  <main>
+    <h1>Select your Avatar</h1>
+    <section class="cards">
+      <div class="card" onclick="askConfirmation('https://cdn-icons-png.flaticon.com/512/1674/1674291.png','Batman')">
+        <img src="https://cdn-icons-png.flaticon.com/512/1674/1674291.png" alt="Batman">
+        <h3>Batman</h3>
+      </div>
+      <div class="card" onclick="askConfirmation('https://i.ibb.co/zH8sVXvL/1986-Spider-Man.png','SpiderMan')">
+        <img src="https://i.ibb.co/zH8sVXvL/1986-Spider-Man.png" alt="SpiderMan">
+        <h3>SpiderMan</h3>
+      </div>
+      <div class="card" onclick="askConfirmation('https://i.ibb.co/Q3gJnNYQ/26a61ba47348418974212bfabdc986f1ded8793e58d2a464db21a38f2b0d3dc8-0.jpg','Suzuka')">
+        <img src="https://i.ibb.co/Q3gJnNYQ/26a61ba47348418974212bfabdc986f1ded8793e58d2a464db21a38f2b0d3dc8-0.jpg" alt="Suzuka">
+        <h3>Suzuka</h3>
+      </div>
+      <div class="card" onclick="askConfirmation('https://i.ibb.co/h1RBvwvP/175c1355af4adc478512f2ed7d3d677f.jpg','Mickey mouse')">
+        <img src="https://i.ibb.co/h1RBvwvP/175c1355af4adc478512f2ed7d3d677f.jpg" alt="Mickey mouse">
+        <h3>Mickey mouse</h3>
+      </div>
+    </section>
+  </main>
+
+  <div id="popup" class="popup">
+    <h3><span class="emoji">😊</span> Are you okay to set this as your profile?</h3>
+    <button class="btn-yes" onclick="confirmProfile()">OK</button>
+    <button class="btn-no" onclick="closePopup()">No</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Kids Learning Zone | Safe & Fun Learning for All</p>
+  </footer>
+
+  <script>
+    let pendingImage = null;
+    let pendingName = null;
+    let selectedAge = null;
+
+    function askConfirmation(imageUrl, name) {
+      pendingImage = imageUrl;
+      pendingName = name;
+      document.getElementById("popup").style.display = "block";
+    }
+
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+      pendingImage = null;
+      pendingName = null;
+    }
+
+    function setAge(age) {
+      selectedAge = age;
+      document.getElementById("selectedAge").textContent = "Age: " + age;
+    }
+
+    function confirmProfile() {
+      if (pendingImage && pendingName) {
+        document.getElementById("profilePhoto").src = pendingImage;
+        document.getElementById("profileName").textContent = pendingName;
+
+        // Save to backend
+        fetch('/save_profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: pendingName,
+            image: pendingImage,
+            age: selectedAge
+          })
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.error(err));
+
+        launchConfetti();
+      }
+      closePopup();
+    }
+
+    function launchConfetti() {
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        document.body.appendChild(confetti);
+
+        const colors = ["red", "yellow", "blue", "green", "orange", "purple", "pink"];
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        confetti.style.width = confetti.style.height = (Math.random() * 8 + 5) + "px";
+
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    // Load saved profile on page load
+    window.onload = function() {
+      fetch('/get_profile')
+        .then(res => res.json())
+        .then(data => {
+          if (data.name) {
+            document.getElementById("profileName").textContent = data.name;
+            document.getElementById("profilePhoto").src = data.image;
+            selectedAge = data.age;
+            if (selectedAge) {
+              document.getElementById("selectedAge").textContent = "Age: " + selectedAge;
+            }
+          }
+        });
+    };
+  </script>
+</body>
+</html>

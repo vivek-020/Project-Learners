@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A–Z Word Matching Puzzle</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, cursive;
+      background: #f0f9ff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff6600;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 30px;
+    }
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .item {
+      padding: 15px;
+      font-size: 20px;
+      background: #fff;
+      border: 2px solid #333;
+      border-radius: 10px;
+      cursor: grab;
+    }
+    .dropzone {
+      padding: 15px;
+      font-size: 18px;
+      background: #dfffd8;
+      border: 2px dashed #333;
+      border-radius: 10px;
+      min-width: 260px;
+    }
+    .correct {
+      background: #90ee90 !important;
+    }
+    .wrong {
+      background: #ffcccb !important;
+    }
+    .buttons {
+      margin-top: 40px;
+    }
+    .btn {
+      padding: 12px 20px;
+      font-size: 18px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #ff6600;
+      color: white;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #ff3300;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧩 Match the Word to the Sentence (A–Z) ✨</h1>
+  <p>Drag the word to the correct sentence</p>
+
+  <div class="container">
+    <div class="column" id="words"></div>
+    <div class="column" id="sentences"></div>
+  </div>
+
+  <div class="buttons">
+    <button class="btn" onclick="window.location.reload()">🔄 Play Again</button>
+    <button class="btn" onclick="window.location.href='/7years'">🏠 Go to Home</button>
+  </div>
+
+  <script>
+    // A–Z words and sentences (answers hidden with _____)
+    const data = {
+      Apple: "_____ is a sweet fruit.",
+      Ball: "Children play with a _____.",
+      Cat: "_____ likes to drink milk.",
+      Dog: "_____ is a faithful animal.",
+      Elephant: "_____ has a long trunk.",
+      Fish: "_____ lives in water.",
+      Goat: "_____ gives us milk.",
+      Horse: "_____ runs very fast.",
+      Ice: "_____ is very cold.",
+      Jug: "Water is stored in a _____.",
+      Kite: "A _____ flies in the sky.",
+      Lion: "_____ is the king of the jungle.",
+      Monkey: "_____ jumps from tree to tree.",
+      Nest: "Birds live in a _____.",
+      Orange: "_____ is a juicy fruit.",
+      Parrot: "_____ is a green bird.",
+      Queen: "A _____ wears a crown.",
+      Rabbit: "_____ eats carrots.",
+      Sun: "_____ gives us light.",
+      Tree: "_____ gives us oxygen.",
+      Umbrella: "We use an _____ in the rain.",
+      Van: "A _____ carries children to school.",
+      Watch: "We see the time in a _____.",
+      Xylophone: "A _____ makes musical sounds.",
+      Yak: "_____ lives in cold mountains.",
+      Zebra: "_____ has black and white stripes."
+    };
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    const words = Object.keys(data);
+    const sentences = Object.values(data);
+
+    // Pick 6 random pairs each refresh
+    let selected = [];
+    while (selected.length < 6) {
+      let idx = Math.floor(Math.random() * words.length);
+      if (!selected.includes(idx)) selected.push(idx);
+    }
+
+    let chosenWords = selected.map(i => words[i]);
+    let chosenSentences = selected.map(i => sentences[i]);
+
+    // Shuffle sentences
+    chosenSentences = shuffle(chosenSentences);
+
+    const wordsDiv = document.getElementById("words");
+    const sentencesDiv = document.getElementById("sentences");
+
+    // Create draggable words
+    chosenWords.forEach(word => {
+      let div = document.createElement("div");
+      div.className = "item";
+      div.textContent = word;
+      div.draggable = true;
+      div.id = "word-" + word;
+      div.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text", word);
+      });
+      wordsDiv.appendChild(div);
+    });
+
+    // Create dropzones
+    chosenSentences.forEach(sentence => {
+      let drop = document.createElement("div");
+      drop.className = "dropzone";
+      drop.textContent = sentence;
+      drop.addEventListener("dragover", e => e.preventDefault());
+      drop.addEventListener("drop", e => {
+        e.preventDefault();
+        let word = e.dataTransfer.getData("text");
+        if (data[word] === sentence) {
+          drop.classList.add("correct");
+          drop.textContent = sentence.replace("_____", word);
+        } else {
+          drop.classList.add("wrong");
+          setTimeout(() => drop.classList.remove("wrong"), 800);
+        }
+      });
+      sentencesDiv.appendChild(drop);
+    });
+  </script>
+</body>
+</html>

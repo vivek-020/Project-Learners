@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fun Riddles for Kids (Age 7+)</title>
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #64748b;
+      --accent: #7c3aed;
+      --accent-2: #06b6d4;
+      --good: #16a34a;
+      --bad: #dc2626;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: var(--bg); color: var(--ink);
+      display: grid; place-items: center; min-height: 100dvh;
+    }
+    .app {
+      width: min(920px, 92vw);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(16px, 2.6vw, 28px);
+    }
+    header {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .title {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; letter-spacing: .3px;
+      font-size: clamp(18px, 3.8vw, 28px);
+    }
+    .pill {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white; padding: 6px 12px; border-radius: 999px; font-weight: 700; font-size: 12px;
+    }
+    .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    button, .btn {
+      border: 0; border-radius: 14px; padding: 10px 14px; font-weight: 700; cursor: pointer;
+      background: #111827; color: white; box-shadow: var(--shadow);
+    }
+    button.secondary { background: #334155; }
+    button.ghost { background: transparent; color: var(--ink); border: 2px solid #e5e7eb; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .progress {
+      margin: 8px 0 16px; height: 10px; width: 100%; background: #e5e7eb; border-radius: 999px; overflow: hidden;
+    }
+    .bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s ease; }
+    .card {
+      background: #f8fafc; border-radius: 18px; padding: clamp(16px, 3vw, 22px); border: 1px solid #e5e7eb;
+    }
+    .riddle {
+      font-size: clamp(18px, 3.6vw, 26px); line-height: 1.3; font-weight: 800; margin: 0 0 8px;
+    }
+    .hint {
+      color: var(--muted); font-size: clamp(14px, 2.8vw, 16px); margin: 8px 0 0; display: none;
+    }
+    .answers { display: grid; gap: 10px; margin-top: 14px; }
+    .choice {
+      width: 100%; text-align: left; background: white; color: var(--ink); border: 2px solid transparent;
+      padding: 12px 14px; border-radius: 14px; font-size: clamp(15px, 3.2vw, 18px); transition: transform .06s ease, border-color .2s ease;
+    }
+    .choice:hover { transform: translateY(-1px); }
+    .choice.correct { border-color: var(--good); }
+    .choice.wrong { border-color: var(--bad); }
+
+    .status { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--muted); font-weight: 700; }
+    .score { font-weight: 900; color: var(--ink); }
+
+    .footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 10px; flex-wrap: wrap; }
+    .big { font-size: clamp(20px, 4.4vw, 30px); font-weight: 900; }
+
+    .celebrate { display: none; font-size: 48px; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .toggle {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; border: 2px solid #e5e7eb;
+      background: white; font-weight: 700; cursor: pointer;
+    }
+  </style>
+
+    <button class="btn" onclick="window.location.href='/7years'">🏠 Go to Home</button>
+</head>
+
+<body>
+  <main class="app" role="main">
+    <header>
+      <div class="title">🧠✨ Fun Riddles for Kids <span class="pill">Age 7+</span></div>
+      <div class="controls">
+        <button id="resetBtn" class="ghost" aria-label="Restart the quiz">↻ Restart</button>
+        <label class="toggle" title="Read riddles out loud">
+          <input id="ttsToggle" type="checkbox" /> 🔊 Read Aloud
+        </label>
+      </div>
+    </header>
+
+    <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+
+    <section class="card" id="card">
+      <h2 id="riddle" class="riddle">Loading…</h2>
+      <p id="hint" class="hint"></p>
+      <div id="answers" class="answers" role="group" aria-labelledby="riddle"></div>
+      <div class="status" aria-live="polite">
+        <span>Question <span id="qNum">1</span>/<span id="qTotal">10</span></span>
+        <span>•</span>
+        <span class="score">Score: <span id="score">0</span></span>
+      </div>
+      <div class="footer">
+        <button id="hintBtn" class="secondary">💡 Show Hint</button>
+        <button id="nextBtn">Next ➡️</button>
+      </div>
+    </section>
+
+    <section id="end" class="card" style="display:none; text-align:center;">
+      <div class="big" id="resultTitle">Great job!</div>
+      <p id="resultText">You solved X riddles!</p>
+      <div class="celebrate" id="celebrate">🎉🎉🎉</div>
+      <div style="margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button id="tryAgain">Play Again</button>
+        <button id="showAll" class="ghost">See All Answers</button>
+      </div>
+      <div id="allAnswers" style="text-align:left; margin-top:10px; display:none;"></div>
+    </section>
+  </main>
+
+  <script>
+    // ——— Riddles (kid‑friendly, 7+) ———
+    const RIDDLES = [
+      { q: "What has keys but can't open locks?", a: "A piano", options: ["A piano", "A map", "A clock"], hint: "It makes music." },
+      { q: "What has a face and two hands but no arms or legs?", a: "A clock", options: ["A robot", "A clock", "A doll"], hint: "It tells time." },
+      { q: "What gets wetter the more it dries?", a: "A towel", options: ["A sponge", "A towel", "A cloud"], hint: "You use it after a bath." },
+      { q: "I have a tail and a head, but no body. What am I?", a: "A coin", options: ["A kite", "A coin", "A lizard"], hint: "You can flip me." },
+      { q: "What has to be broken before you can use it?", a: "An egg", options: ["A door", "A box", "An egg"], hint: "Breakfast!" },
+      { q: "What can you catch but not throw?", a: "A cold", options: ["A ball", "A cold", "A kite"], hint: "" },
+      { q: "What has many teeth but cannot bite?", a: "A comb", options: ["A zipper", "A comb", "A saw"], hint: "It helps your hair." },
+      { q: "What is full of holes but still holds water?", a: "A sponge", options: ["A cup", "A net", "A sponge"], hint: "Found near the sink." },
+      { q: "What goes up but never comes down?", a: "Your age", options: ["A kite", "Your age", "Smoke"], hint: "Every birthday it changes." },
+      { q: "I’m tall when I’m young and short when I’m old. What am I?", a: "A candle", options: ["A tree", "A candle", "A pencil"], hint: "I melt." },
+      { q: "What has legs but doesn’t walk?", a: "A table", options: ["A chair", "A table", "A bed"], hint: "Dinner time." },
+      { q: "What belongs to you but is used more by others?", a: "Your name", options: ["Your toy", "Your name", "Your shoes"], hint: "People say it to call you." },
+      { q: "What can travel around the world while staying in a corner?", a: "A stamp", options: ["A shadow", "A stamp", "A coin"], hint: "On an envelope." },
+      { q: "Where does Friday come before Thursday?", a: "In a dictionary", options: ["On a calendar", "In a dictionary", "On TV"], hint: "Words live there." },
+      { q: "What has ears but cannot hear?", a: "Corn", options: ["Corn", "A stuffed toy", "A statue"], hint: "Grows on a farm." },
+      { q: "What kind of room has no doors or windows?", a: "A mushroom", options: ["A classroom", "A mushroom", "A bathroom"], hint: "It's tasty on pizza." },
+      { q: "What runs but never walks?", a: "A river", options: ["A cat", "A river", "A car"], hint: "It flows." },
+      { q: "Which month has 28 days?", a: "All of them", options: ["February", "All of them", "June"], hint: "Tricky!" },
+      { q: "What has a neck but no head?", a: "A bottle", options: ["A bottle", "A guitar", "A road"], hint: "Holds juice or water." },
+      { q: "What gets bigger the more you take away?", a: "A hole", options: ["A hole", "A balloon", "A puzzle"], hint: "Dig, dig, dig." },
+      { q: "I am not alive, but I can grow; I don't have lungs, but I need air. What am I?", a: "Fire", options: ["Fire", "A rock", "A robot"], hint: "Camp nights." },
+      { q: "What has one eye but cannot see?", a: "A needle", options: ["A hurricane", "A potato", "A needle"], hint: "Helps with sewing." },
+      { q: "What word is spelled wrong in every dictionary?", a: "Wrong", options: ["Wrong", "Dictionary", "Every"], hint: "It's a joke!" },
+      { q: "What can you hold without ever touching it?", a: "A conversation", options: ["Your breath", "A conversation", "A bubble"], hint: "Two people or more." },
+      { q: "What has four wheels and flies?", a: "A garbage truck", options: ["An airplane", "A garbage truck", "A race car"], hint: "The flies are insects!" },
+      { q: "What has words, but never speaks?", a: "A book", options: ["A book", "A radio", "A cloud"], hint: "Library friend." },
+      { q: "What goes up and down but doesn’t move?", a: "A staircase", options: ["A yo-yo", "A staircase", "A swing"], hint: "In tall buildings." },
+      { q: "What is always in front of you but can’t be seen?", a: "The future", options: ["The air", "The future", "Your nose"], hint: "Tomorrow and next week." },
+      { q: "What can you break without touching it?", a: "A promise", options: ["A promise", "A cookie", "An egg"], hint: "Keep your word." },
+      { q: "What has a bed but never sleeps?", a: "A river", options: ["A river", "A hedgehog", "A baby"], hint: "Banks on both sides." }
+    ];
+
+    // ——— Helpers ———
+    const shuffle = arr => arr.map(v => [Math.random(), v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+
+    let state = {
+      order: [],
+      i: 0,
+      score: 0,
+      answered: false,
+      tts: false,
+    };
+
+    const els = {
+      riddle: document.getElementById('riddle'),
+      hint: document.getElementById('hint'),
+      answers: document.getElementById('answers'),
+      qNum: document.getElementById('qNum'),
+      qTotal: document.getElementById('qTotal'),
+      score: document.getElementById('score'),
+      hintBtn: document.getElementById('hintBtn'),
+      nextBtn: document.getElementById('nextBtn'),
+      bar: document.getElementById('bar'),
+      reset: document.getElementById('resetBtn'),
+      end: document.getElementById('end'),
+      card: document.getElementById('card'),
+      resultTitle: document.getElementById('resultTitle'),
+      resultText: document.getElementById('resultText'),
+      celebrate: document.getElementById('celebrate'),
+      tryAgain: document.getElementById('tryAgain'),
+      showAll: document.getElementById('showAll'),
+      allAnswers: document.getElementById('allAnswers'),
+      ttsToggle: document.getElementById('ttsToggle'),
+    };
+
+    const speak = text => {
+      if (!state.tts) return;
+      const synth = window.speechSynthesis;
+      if (!synth) return;
+      synth.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1.05;
+      synth.speak(utter);
+    };
+
+    function start() {
+      state.order = shuffle(RIDDLES.map((_, idx) => idx));
+      state.i = 0;
+      state.score = 0;
+      els.qTotal.textContent = Math.min(10, RIDDLES.length);
+      els.score.textContent = '0';
+      els.end.style.display = 'none';
+      els.card.style.display = 'block';
+      next();
+    }
+
+    function render(idx) {
+      const r = RIDDLES[idx];
+      els.qNum.textContent = state.i + 1;
+      els.riddle.textContent = r.q;
+      els.hint.textContent = r.hint ? 'Hint: ' + r.hint : 'No hint needed—give it a try!';
+      els.hint.style.display = 'none';
+
+      els.answers.innerHTML = '';
+      const options = shuffle([ ...r.options ]);
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => choose(btn, opt === r.a));
+        els.answers.appendChild(btn);
+      });
+
+      els.nextBtn.disabled = true;
+      state.answered = false;
+
+      const pct = ((state.i) / Math.min(10, RIDDLES.length)) * 100;
+      els.bar.style.width = pct + '%';
+
+      speak('Riddle ' + (state.i + 1) + ': ' + r.q);
+    }
+
+    function choose(btn, correct) {
+      if (state.answered) return;
+      state.answered = true;
+      const buttons = [...document.querySelectorAll('.choice')];
+      buttons.forEach(b => b.disabled = true);
+      if (correct) {
+        btn.classList.add('correct');
+        state.score++;
+        els.score.textContent = state.score;
+        speak('Correct!');
+      } else {
+        btn.classList.add('wrong');
+        const idx = state.order[state.i];
+        const r = RIDDLES[idx];
+        const rightBtn = buttons.find(b => b.textContent === r.a);
+        if (rightBtn) rightBtn.classList.add('correct');
+        speak('Nice try. The answer is ' + r.a + '.');
+      }
+      els.nextBtn.disabled = false;
+    }
+
+    function next() {
+      if (state.i >= Math.min(10, RIDDLES.length)) return finish();
+      const idx = state.order[state.i];
+      render(idx);
+    }
+
+    function finish() {
+      els.card.style.display = 'none';
+      els.end.style.display = 'block';
+      els.bar.style.width = '100%';
+      const total = Math.min(10, RIDDLES.length);
+      const percent = Math.round((state.score / total) * 100);
+      els.resultTitle.textContent = percent >= 80 ? 'Amazing! 🏆' : percent >= 50 ? 'Great job! 🎉' : 'Good effort! 💪';
+      els.resultText.textContent = `You solved ${state.score} out of ${total} riddles.`;
+      els.celebrate.style.display = percent >= 80 ? 'block' : 'none';
+      speak(els.resultTitle.textContent + ' You solved ' + state.score + ' out of ' + total + ' riddles.');
+
+      // Build the review list
+      const list = document.createElement('ol');
+      state.order.slice(0, total).forEach(i => {
+        const li = document.createElement('li');
+        li.style.margin = '6px 0';
+        li.innerHTML = `<strong>${RIDDLES[i].q}</strong><br><em>Answer:</em> ${RIDDLES[i].a}`;
+        list.appendChild(li);
+      });
+      els.allAnswers.innerHTML = '';
+      els.allAnswers.appendChild(list);
+    }
+
+    // ——— Events ———
+    els.hintBtn.addEventListener('click', () => {
+      const isShown = els.hint.style.display === 'block';
+      els.hint.style.display = isShown ? 'none' : 'block';
+      if (!isShown) speak(els.hint.textContent);
+    });
+
+    els.nextBtn.addEventListener('click', () => {
+      if (!state.answered) return; // must answer first
+      state.i++;
+      if (state.i < Math.min(10, RIDDLES.length)) next();
+      else finish();
+    });
+
+    els.reset.addEventListener('click', start);
+    els.tryAgain.addEventListener('click', start);
+
+    els.showAll.addEventListener('click', () => {
+      const shown = els.allAnswers.style.display === 'block';
+      els.allAnswers.style.display = shown ? 'none' : 'block';
+    });
+
+    els.ttsToggle.addEventListener('change', (e) => {
+      state.tts = !!e.target.checked;
+      if (state.tts) speak('Read Aloud is on.');
+    });
+
+    // Kick off
+    start();
+  </script>
+</body>
+</html>

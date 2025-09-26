@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fun Riddle Game for Kids</title>
+    <style>
+
+        --
+                <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(to bottom, #fff, #d1f4ff);
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+
+    }
+    .mascot {
+      width: 140px;
+      margin: 10px auto;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .shapes {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    svg {
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+      stroke: black;
+      stroke-width: 2;
+      fill: white;
+      transition: fill 0.3s ease;
+    }
+    .palette {
+      margin: 20px;
+    }
+    .color-btn {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      margin: 5px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #333;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1000;
+    }
+    .confetti div {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      animation: fall 3s linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(100vh) rotate(360deg); }
+    }
+---
+  <style>
+    :root{
+      --bg: #FFF7E9;
+      --card: #FFFFFF;
+      --primary: #FF8A00;
+      --primary-2: #FFB703;
+      --accent: #5E60CE;
+      --text: #2B2D42;
+      --good: #2ecc71;
+      --bad: #e74c3c;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;}
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 500px at 10% -10%, #FFF3C4 0%, #FFF7E9 40%, #FFF7E9 100%);
+      color: var(--text);
+      -webkit-tap-highlight-color: transparent;
+    }
+    header{
+      position: sticky; top:0; z-index:10;      
+      background:rgb(232, 14, 115);
+
+      color:#fff; padding: 14px 16px; display:flex; align-items:center; gap:12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12);
+    }
+    .brand{font-weight:800; letter-spacing:.3px; font-size: clamp(18px, 3.2vw, 28px)}
+    .spacer{flex:1}
+    .pill{background: rgba(200,200,200,.2); border:2px solid rgba(255,255,255,.35); padding:8px 12px; border-radius:999px; display:flex; align-items:center; gap:8px; font-weight:700}
+    .btn{cursor:pointer; border:none; border-radius:16px; padding:12px 16px; font-weight:700; font-size:18px; background: var(--accent); color:#fff; box-shadow:0 6px 14px rgba(0,0,0,.12)}
+    .btn.secondary{ background:#fff; color: var(--accent); border:2px solid var(--accent)}
+    .btn.ghost{ background: transparent; color:#fff; border:2px solid rgba(100,100,100,.5)}
+    
+    .wrap{max-width:1100px; margin: 0 auto; padding: 18px 16px 60px}
+
+    /* Home grid */
+    .grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:16px}
+    .card{background:var(--card); border-radius:24px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,.08); transition: transform .15s ease, box-shadow .15s ease; display:flex; flex-direction:column; justify-content:space-between; min-height:170px}
+    .card:hover{transform: translateY(-2px); box-shadow:0 12px 30px rgba(0,0,0,.12)}
+    .card {margin:6px 0 8px; font-size:20px}
+    .card p{margin:0; opacity:.8}
+    .big-emoji{font-size:44px}
+
+    .screens{position:relative}
+    .screen{display:none; animation: fade .2s ease}
+    .screen.active{display:block}
+    @keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+    .toolbar{display:flex; gap:8px; align-items:center; margin: 10px 0 18px}
+    .toolbar .back{background:#fff; border:2px solid #eee; color:#333}
+
+    .panel{background:#fff; border-radius:24px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08)}
+
+    /* ALPHABET */
+    .alpha-main{display:grid; grid-template-columns: 1.1fr .9fr; gap:16px}
+    .alpha-letter{font-size: clamp(90px, 16vw, 160px); font-weight: 900; line-height: .9; text-align:center; background: linear-gradient(180deg,#222,#666); -webkit-background-clip:text; -webkit-text-fill-color: transparent}
+    .alpha-word{font-size: clamp(22px, 3vw, 30px); text-align:center}
+    .alpha-keys{display:grid; grid-template-columns: repeat(13,1fr); gap:6px}
+    .alpha-keys button{padding:10px; border-radius:12px; border:2px solid #eee; background:#fafafa; font-weight:900; font-size:18px}
+
+    /* COUNTING */
+    .count-items{font-size:40px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:8px}
+    .choices{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+    .choices button{font-size:20px}
+
+    /* COLOR & SHAPE */
+    .palette{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:8px 0 14px}
+    .swatch{width:40px; height:40px; border-radius:12px; border:2px solid rgba(0,0,0,.08); cursor:pointer}
+    .shapes{display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:16px; place-items:center}
+    svg.shape{width:160px; height:160px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.1))}
+<button>dd<button/>
+    /* MATCH GAME (tap-to-match for touch support) */
+    .match-wrap{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+    .list{background:#fff; border-radius:24px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    .item{display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; border:2px dashed #eee; border-radius:16px; margin:8px 0; font-size:28px; cursor:pointer}
+    .target{opacity:.7}
+    .matched{background:#E9FCEB; border:2px solid #b6f3bf}
+
+    /* TRACING */
+    .trace-wrap{display:grid; grid-template-columns: 1fr; gap:12px}
+    .trace-board{position:relative; border-radius:24px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    .trace-bg{position:absolute; inset:0; display:grid; place-items:center; font-weight:900; font-size: clamp(180px, 30vw, 280px); color: rgba(0,0,0,.06); user-select:none}
+    canvas{display:block; width:100%; height:400px; background:#fff; touch-action:none}
+
+    /* FEEDBACK */
+    .toast{position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#111; color:#fff; padding:10px 14px; border-radius:999px; font-weight:700; opacity:0; pointer-events:none; transition:.2s}
+    .toast.show{opacity:1}
+
+    /* CONFETTI */
+    .confetti{position:fixed; top:-20px; font-size:24px; animation: fall linear forwards;}
+    @keyframes fall{to{transform: translateY(110vh) rotate(260deg); opacity:.9}}
+
+    /* Utilities */
+    .center{text-align:center}
+    .muted{opacity:.7}
+    .success{color:var(--good)}
+    .error{color:var(--bad)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand" background="brown">🧸 Kids Learning • Age 8</div>
+    <div class="spacer"></div>
+    <div class="pill" id="starPill" aria-live="polite">⭐ <span id="stars">0</span> Stickers</div>
+  </header>
+
+<style>
+<head>
+<body>
+
+        -----
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #FFD194, #D191FF);
+            color: #333;
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            font-size: 48px;
+            color: #ff5722;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px #fff;
+        }
+        .riddle-box {
+            background: #fff8dc;
+            padding: 40px 30px;
+            margin: 0 auto;
+            width: 70%;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            font-size: 24px;
+        }
+        #riddle {
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            padding: 15px;
+            width: 80%;
+            font-size: 20px;
+            border: 2px solid #ff5722;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 25px;
+            margin: 10px 10px 0 10px;
+            font-size: 20px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #e68900;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .result, .hint-text {
+            margin-top: 25px;
+            font-weight: bold;
+            font-size: 22px;
+        }
+        .hint-text {
+            color: #ff5722;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🎉 Fun Riddle Game 🎉</h1>
+
+<div class="riddle-box">
+    <p id="riddle">Click "Next Riddle" to start!</p>
+    <input type="text" id="answer" placeholder="Type your answer here">
+    <br>
+    <button id="submitBtn" onclick="checkAnswer()">✅ Submit Answer</button>
+    <button id="prevBtn" onclick="previousRiddle()" disabled>⬅ Previous Riddle</button>
+    <button id="nextBtn" onclick="nextRiddle()">➡ Next Riddle</button>
+    <button id="hintBtn" onclick="showHint()">💡 Show Hint</button>
+    <p class="hint-text" id="hint"></p>
+    <p class="result" id="result"></p>
+</div>
+
+<script>
+    const riddles = [
+        {question: "What has a face and two hands but no arms or legs?", answer: "clock", hint: "It tells time."},
+        {question: "What gets wetter the more it dries?", answer: "towel", hint: "You use it after a bath."},
+        {question: "I fly without wings, I cry without eyes. Wherever I go, darkness flies. What am I?", answer: "cloud", hint: "You see me in the sky."},
+        {question: "What has cities but no houses, forests but no trees, and rivers but no water?", answer: "map", hint: "It shows the world on paper."},
+        {question: "The more of me you take, the more you leave behind. What am I?", answer: "footsteps", hint: "You make them when you walk."},
+        {question: "I’m always in front of you but can’t be seen. What am I?", answer: "future", hint: "It hasn’t happened yet."},
+        {question: "I can be cracked, made, told, and played. What am I?", answer: "joke", hint: "I make people laugh."},
+        {question: "I have a neck but no head, and wear a cap. What am I?", answer: "bottle", hint: "You drink from me."},
+        {question: "What has one eye but can’t see?", answer: "needle", hint: "Used for sewing."},
+        {question: "I’m taken from a mine, and shut up in a wooden case, from which I am never released, and yet I am used by almost every person. What am I?", answer: "pencil", hint: "Used for writing or drawing."}
+    ];
+
+    let currentRiddleIndex = -1;
+
+    function loadRiddle() {
+        document.getElementById('riddle').innerText = riddles[currentRiddleIndex].question;
+        document.getElementById('answer').value = '';
+        document.getElementById('result').innerText = '';
+        document.getElementById('hint').innerText = '';
+        updateButtons();
+    }
+
+    function updateButtons() {
+        document.getElementById('prevBtn').disabled = currentRiddleIndex <= 0;
+        document.getElementById('nextBtn').disabled = currentRiddleIndex >= riddles.length - 1;
+    }
+
+    function nextRiddle() {
+        if(currentRiddleIndex < riddles.length - 1) {
+            currentRiddleIndex++;
+            loadRiddle();
+        }
+    }
+
+    function previousRiddle() {
+        if(currentRiddleIndex > 0) {
+            currentRiddleIndex--;
+            loadRiddle();
+        }
+    }
+
+    function checkAnswer() {
+        const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+        const correctAnswer = riddles[currentRiddleIndex].answer.toLowerCase();
+
+        if(userAnswer === correctAnswer) {
+            document.getElementById('result').innerText = "🎉 Correct! Well done!";
+            document.getElementById('result').style.color = "green";
+        } else {
+            document.getElementById('result').innerText = "❌ Wrong Answer! Try again!";
+            document.getElementById('result').style.color = "red";
+        }
+    }
+
+    function showHint() {
+        document.getElementById('hint').innerText = "💡 Hint: " + riddles[currentRiddleIndex].hint;
+    }
+</script>
+
+</body>
+</html>
